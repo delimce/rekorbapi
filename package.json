@@ -1,0 +1,34 @@
+{
+  "name": "rekorbapi",
+  "version": "1.0.0",
+  "description": "Api based in nodejs/express to provide resources to rekorbit mobile app",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index",
+    "dev": "nodemon index",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/delimce/rekorbapi.git"
+  },
+  "keywords": [
+    "rekorbit",
+    "nodejs",
+    "crypto",
+    "develemento"
+  ],
+  "author": "delimce",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/delimce/rekorbapi/issues"
+  },
+  "homepage": "https://github.com/delimce/rekorbapi#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
