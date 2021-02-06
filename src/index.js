@@ -10,10 +10,10 @@ const fiat = require('./routes/fiat');
 app.use('/crypto', crypto);
 app.use('/fiat', fiat);
 
+//modules
+const errorHandler = require('./modules/errors');
+app.use(errorHandler);
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
