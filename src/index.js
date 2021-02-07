@@ -2,7 +2,7 @@ require('dotenv').config()
 
 const express = require('express')
 const app = express()
-const port = process.env.PORT
+const port = process.env.SERVER_PORT
 
 // Routes
 const crypto = require('./routes/crypto');
@@ -16,6 +16,6 @@ app.use(errorHandler);
 
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
+  console.log(`App listening at http://localhost:${port}`)
 })
 
