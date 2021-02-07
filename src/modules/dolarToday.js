@@ -2,7 +2,7 @@
 
 const axios = require('axios');
 
-exports.getInfo = async function () {
+const getInfo = async function () {
     let url_dtoday = "https://s3.amazonaws.com/dolartoday/data.json"
     let result = {}
     try {
@@ -18,5 +18,11 @@ exports.getInfo = async function () {
     } finally {
         return result.data;
     }
+}
 
+exports.getInfo = getInfo;
+
+exports.getUsdPrice = async function () {
+    let data = await getInfo();
+    return Number(data.USD.dolartoday); //Bs
 }
