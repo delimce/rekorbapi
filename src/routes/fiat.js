@@ -14,6 +14,17 @@ router.get('/dtoday/info', async function (req, res) {
     res.json(info);
 });
 
+router.get('/dtoday/:id', async function (req, res) {
+    let id = req.params.id;
+    let info = await dtoday.getById(id);
+    if (!info) {
+        res.status(400);
+        res.json({ "error": "not found" });
+    } else {
+        res.json(info);
+    }
+});
+
 router.get('/dmonitor', async function (req, res) {
     let info = await dmonitor.getUsdPrice()
     res.json(info);

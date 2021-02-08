@@ -20,9 +20,19 @@ const getInfo = async function () {
     }
 }
 
+
+
 exports.getInfo = getInfo;
 
 exports.getUsdPrice = async function () {
     let data = await getInfo();
     return Number(data.USD.dolartoday); //Bs
+}
+
+exports.getById = async function (id) {
+    let data = await getInfo();
+    if (!data[id]) { //undefined
+        return false;
+    }
+    return data[id];
 }
