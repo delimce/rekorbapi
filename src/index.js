@@ -8,6 +8,8 @@ const port = process.env.SERVER_PORT
 const bodyParser = require("./middlewares/bodyParser.js");
 app.use(bodyParser.parsers);
 
+app.use(express.static('public'));
+
 // Routes
 const crypto = require('./routes/crypto');
 const fiat = require('./routes/fiat');
