@@ -3,6 +3,8 @@ const dtoday = require("../modules/dolarToday");
 const dmonitor = require("../modules/dolarMonitor");
 const floatrates = require("../modules/floatrates");
 let router = express.Router();
+const apicache = require('apicache');
+let cache = apicache.middleware;
 
 router.get('/dtoday', async function (req, res) {
     let info = await dtoday.getUsdPrice()
