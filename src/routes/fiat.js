@@ -16,7 +16,7 @@ router.get('/dtoday/info', async function (req, res) {
 
 router.get('/dtoday/:id', async function (req, res) {
     let id = req.params.id;
-    let info = await dtoday.getById(id);
+    let info = await dtoday.getById(id.toUpperCase());
     if (!info) {
         res.status(400);
         res.json({ "error": "not found" });
