@@ -13,10 +13,9 @@ const getInfo = async function () {
             json: true,
             gzip: true
         })
+        return result.data;
     } catch (error) {
         console.log(error)
-    } finally {
-        return result.data;
     }
 }
 
