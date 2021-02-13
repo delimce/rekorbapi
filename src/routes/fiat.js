@@ -2,6 +2,7 @@ const express = require('express');
 const dtoday = require("../modules/dolarToday");
 const dmonitor = require("../modules/dolarMonitor");
 const floatrates = require("../modules/floatrates");
+const bluelytics = require("../modules/bluelytics");
 let router = express.Router();
 const apicache = require('apicache');
 let cache = apicache.middleware;
@@ -34,6 +35,14 @@ router.get('/dmonitor', async function (req, res) {
 
 router.get('/floatrates', async function (req, res) {
     let info = await floatrates.getInfoFiats()
+    res.json(info);
+});
+
+/**
+ * Arg currency
+ */
+router.get('/bluelytics', cache('60 minutes'), async function (req, res) {
+    let info = await bluelytics.getInfoArg()
     res.json(info);
 });
 
