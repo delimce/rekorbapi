@@ -1,31 +1,6 @@
-require('dotenv').config()
+const app = require('./server')
 
-const express = require('express')
-const app = express()
-const port = process.env.SERVER_PORT
-
-//middlewares
-const bodyParser = require("./middlewares/bodyParser.js");
-app.use(bodyParser.parsers);
-
-app.use(express.static('public'));
-
-// Routes
-const crypto = require('./routes/crypto');
-const fiat = require('./routes/fiat');
-const trades = require('./routes/trades');
-const rekorbit = require('./routes/app');
-app.use('/crypto', crypto);
-app.use('/fiat', fiat);
-app.use('/trades', trades);
-app.use('/app', rekorbit);
-
-//modules
-const errorHandler = require('./middlewares/errors');
-app.use(errorHandler);
-
-
-app.listen(port, () => {
-  console.log(`App listening at http://localhost:${port}`)
+app.listen(process.env.SERVER_PORT, () => {
+  console.log(`App listening at http://localhost:${process.env.SERVER_PORT}`)
 })
 
