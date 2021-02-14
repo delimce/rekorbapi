@@ -14,9 +14,11 @@ app.use(express.static('public'));
 const crypto = require('./routes/crypto');
 const fiat = require('./routes/fiat');
 const trades = require('./routes/trades');
+const rekorbit = require('./routes/app');
 app.use('/crypto', crypto);
 app.use('/fiat', fiat);
 app.use('/trades', trades);
+app.use('/app', rekorbit);
 
 //modules
 const errorHandler = require('./middlewares/errors');
