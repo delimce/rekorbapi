@@ -33,4 +33,12 @@ describe('Trades endpoints Test', () => {
         done()
     })
 
+
+    it("Should get localbtc trader's profile by username", async done => {
+        let username = 'saul77';
+        const res = await request.get('/trades/localbtc/trader/' + username)
+        expect(res.body.data.username).toBe(username)
+        done()
+    })
+
 })
