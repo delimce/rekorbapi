@@ -2,6 +2,7 @@
 const axios = require('axios');
 const date = require("date-and-time");
 const BASE_URL = "https://localbitcoins.com/";
+const MAX_TIMEOUT = 6000
 
 const getStatusLabel = function (minutes) {
     let status = "OFFLINE";
@@ -71,7 +72,7 @@ exports.getTradingPostsByCurrency = async function (op, currency, page) {
 
     let info = await axios({
         method: 'get',
-        timeout: 40000,
+        timeout: MAX_TIMEOUT,
         url: url_localbtc
     })
 
@@ -103,7 +104,7 @@ exports.getTradingPostsByLocation = async function (
 
     let info = await axios({
         method: 'get',
-        timeout: 40000,
+        timeout: MAX_TIMEOUT,
         url: url_localbtc
     })
 
@@ -115,7 +116,7 @@ exports.getTraderProfile = async function (trader) {
     let url_localbtc = BASE_URL + "api/account_info/" + trader + "/";
     let info = await axios({
         method: 'get',
-        timeout: 40000,
+        timeout: MAX_TIMEOUT,
         url: url_localbtc
     });
     return info.data;
