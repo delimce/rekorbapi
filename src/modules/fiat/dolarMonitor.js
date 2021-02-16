@@ -13,7 +13,7 @@ exports.getUsdPrice = async function () {
 const convertTitleToPrice = function (data) {
     let title = data.title.split("-");
     let price = title[0].trim().split(" ");
-    return Number(price[1].replaceAll('.', '').replace(',', '.'))
+    return Number(price[1].replace(/./g, '').replace(',', '.'))
 }
 
 
