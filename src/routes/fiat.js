@@ -12,12 +12,12 @@ router.get('/dtoday', async function (req, res) {
     res.json(info);
 });
 
-router.get('/dtoday/info', async function (req, res) {
+router.get('/dtoday/info', cache('45 minutes'), async function (req, res) {
     let info = await dtoday.getInfo()
     res.json(info);
 });
 
-router.get('/dtoday/:id', async function (req, res) {
+router.get('/dtoday/:id', cache('45 minutes'), async function (req, res) {
     let id = req.params.id;
     let info = await dtoday.getById(id.toUpperCase());
     if (!info) {
@@ -28,12 +28,12 @@ router.get('/dtoday/:id', async function (req, res) {
     }
 });
 
-router.get('/dmonitor', async function (req, res) {
+router.get('/dmonitor', cache('45 minutes'), async function (req, res) {
     let info = await dmonitor.getUsdPrice()
     res.json(info);
 });
 
-router.get('/floatrates', async function (req, res) {
+router.get('/floatrates', cache('60 minutes'), async function (req, res) {
     let info = await floatrates.getInfoFiats()
     res.json(info);
 });
