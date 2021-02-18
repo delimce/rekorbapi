@@ -5,10 +5,10 @@ const request = supertest(app)
 
 describe('Fiat endpoints Test', () => {
  
-    it('Should get a numeric dtoday USD price', async done => {
+    it('Should get a numeric > 0 dtoday USD price', async done => {
         // Sends GET Request to /test endpoint
         const res = await request.get('/fiat/dtoday')
-        expect(Number(res.body)).not.toBeNaN()
+        expect(Number(res.body)).toBeGreaterThan(0);
         done()
       })
 
@@ -20,10 +20,17 @@ describe('Fiat endpoints Test', () => {
         done()
       })
 
-      it('Should get a numeric dmonitor USD price', async done => {
+      it('Should get a numeric > 0  dmonitor USD price', async done => {
         // Sends GET Request to /test endpoint
         const res = await request.get('/fiat/dmonitor')
-        expect(Number(res.body)).not.toBeNaN()
+        expect(Number(res.body)).toBeGreaterThan(0);
+        done()
+      })
+
+      it('Should get a numeric > 0 ves ha price USD price', async done => {
+        // Sends GET Request to /test endpoint
+        const res = await request.get('/fiat/ve/ha/price')
+        expect(Number(res.body)).toBeGreaterThan(0);
         done()
       })
 

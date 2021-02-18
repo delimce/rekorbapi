@@ -46,4 +46,25 @@ router.get('/bluelytics', cache('60 minutes'), async function (req, res) {
     res.json(info);
 });
 
+/**
+ * high availability dollar to ves price
+ */
+router.get('/ve/ha/price', cache('45 minutes'), async function (req, res) {
+    let priority = [
+        dtoday,
+        dmonitor
+    ]
+    let usdPrice = 0.0;
+    // sorry, i did not want to use FOR but i had to :(
+    for (let i = 0; i < priority.length; i++) {
+        try {
+            usdPrice = await priority[i].getUsdPrice();
+            break;
+        } catch (err) {
+            continue;
+        }
+    }
+    res.json(usdPrice);
+});
+
 module.exports = router;
