@@ -4,7 +4,7 @@ const request = supertest(app)
 
 describe('Trades endpoints Test', () => {
 
-    it('Should get a localbtc posts array by currency', async done => {
+    it.skip('Should get a localbtc posts array by currency', async done => {
         let currency = 'usd';
         const res = await request.get('/trades/localbtc/posts/currency/' + currency).send({
             "type": "sell",
@@ -18,9 +18,9 @@ describe('Trades endpoints Test', () => {
     })
 
 
-    it.skip('Should get a localbtc posts array by location', async done => {
+    it('Should get a localbtc posts array by location', async done => {
         let location = 've';
-        const res = await request.get('/trades/localbtc/posts/location/' + location).send(
+        const res = await request.put('/trades/localbtc/posts/location/' + location).send(
             {
                 "type":"buy",
                 "page":"1",
