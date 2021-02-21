@@ -2,7 +2,7 @@
 const axios = require('axios');
 const date = require("date-and-time");
 const BASE_URL = "https://localbitcoins.com/";
-const MAX_TIMEOUT = 6000
+const MAX_TIMEOUT = 7000
 
 module.exports =
 {
@@ -32,9 +32,9 @@ module.exports =
         list.forEach(res => {
             if (res.data.visible) {
                 let post = res.data;
+                post.profile.last_online = this.getOnlineStatus(post.profile.last_online);
                 let local = {
                     profile: post.profile,
-                    last_online: this.getOnlineStatus(post.profile.last_online),
                     type: post.trade_type,
                     bank: post.bank_name,
                     msg: post.msg,
