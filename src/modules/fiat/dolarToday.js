@@ -1,6 +1,7 @@
 'use strict';
 
 const axios = require('axios');
+const currencies = require('../../../public/enums/currencies.json');
 
 module.exports =
 {
@@ -25,6 +26,10 @@ module.exports =
             return false;
         }
         return data[id];
+    },
+    getIdByCurrencyName(name) {
+        let currency = currencies.find(el => el.name.toLowerCase() == name.toLowerCase())
+        return (currency) ? currency.id.toUpperCase() : name.toUpperCase()
     }
 
 }

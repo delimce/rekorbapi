@@ -17,9 +17,9 @@ router.get('/dtoday/info', cache('45 minutes'), async function (req, res) {
     res.json(info);
 });
 
-router.get('/dtoday/:id', cache('45 minutes'), async function (req, res) {
-    let id = req.params.id;
-    let info = await dtoday.getById(id.toUpperCase());
+router.get('/dtoday/:name', cache('45 minutes'), async function (req, res) {
+    let id = await dtoday.getIdByCurrencyName(req.params.name);
+    let info = await dtoday.getById(id);
     if (!info) {
         res.status(400);
         res.json({ "error": "not found" });

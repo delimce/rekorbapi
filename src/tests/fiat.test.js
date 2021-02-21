@@ -14,7 +14,7 @@ describe('Fiat endpoints Test', () => {
 
       it('Should get a object dtoday with USD key', async done => {
         // Sends GET Request to /test endpoint
-        const res = await (await request.get('/fiat/dtoday/USD')).body;
+        const res = await (await request.get('/fiat/dtoday/dollar')).body;
         expect(res.dolartoday > 1).toBe(true);
         expect(res.transferencia > 1).toBe(true);
         done()

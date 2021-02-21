@@ -1,0 +1,12 @@
+[
+    {
+        "id":"usd",
+        "name":"Dollar",
+        "order":1
+    },
+    {
+        "id":"eur",
+        "name":"Euro",
+        "order":2
+    }
+]
