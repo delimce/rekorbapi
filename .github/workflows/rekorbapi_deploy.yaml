@@ -1,0 +1,25 @@
+name: rekorbapi_deploy
+on:
+  push:
+     branches: [ main ]
+
+jobs:
+  job_one:
+      name: Deploy
+      runs-on: ubuntu-latest
+      steps:
+      - name: deploying rekorbapi project
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{secrets.DEVSERVER_IP}}
+          username: ${{secrets.DEVSERVER_USER}}
+          key:  ${{secrets.DEVSERVER_SECRET}}
+          port: 22
+          script: |
+            cd /home/delimce/nodeserver/rekorbapi/
+            git checkout .
+            git pull origin main
+            npm install
+            pm2 restart rekorbapi
+
+
