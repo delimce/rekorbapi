@@ -51,8 +51,8 @@ router.get('/bluelytics', cache('60 minutes'), async function (req, res) {
  */
 router.get('/ve/ha/price', cache('45 minutes'), async function (req, res) {
     let priority = [
-        dtoday,
-        dmonitor
+        dmonitor,
+        dtoday
     ]
     let usdPrice = 0.0;
     // sorry, i did not want to use FOR but i had to :(
