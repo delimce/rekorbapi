@@ -59,7 +59,9 @@ router.get('/ve/ha/price', cache('45 minutes'), async function (req, res) {
     for (let i = 0; i < priority.length; i++) {
         try {
             usdPrice = await priority[i].getUsdPrice();
-            break;
+            if (Number(usdPrice) > 0) {
+                break;
+            }
         } catch (err) {
             continue;
         }
