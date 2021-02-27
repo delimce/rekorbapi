@@ -27,6 +27,13 @@ describe('Fiat endpoints Test', () => {
         done()
       })
 
+      it('Should get a numeric > 0  BCV USD price', async done => {
+        // Sends GET Request to /test endpoint
+        const res = await request.get('/fiat/bcv')
+        expect(Number(res.body)).toBeGreaterThan(0);
+        done()
+      })
+
       it('Should get a numeric > 0 ves ha price USD price', async done => {
         // Sends GET Request to /test endpoint
         const res = await request.get('/fiat/ve/ha/price')

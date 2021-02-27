@@ -1,6 +1,7 @@
 const express = require('express');
 const dtoday = require("../modules/fiat/dolarToday");
 const dmonitor = require("../modules/fiat/dolarMonitor");
+const bcv = require("../modules/fiat/bcv");
 const floatrates = require("../modules/fiat/floatrates");
 const bluelytics = require("../modules/fiat/bluelytics");
 let router = express.Router();
@@ -33,6 +34,11 @@ router.get('/dmonitor', cache('45 minutes'), async function (req, res) {
     res.json(info);
 });
 
+router.get('/bcv', cache('45 minutes'), async function (req, res) {
+    let info = await bcv.getUsdPrice()
+    res.json(info);
+});
+
 router.get('/floatrates', cache('60 minutes'), async function (req, res) {
     let info = await floatrates.getInfoFiats()
     res.json(info);
@@ -52,7 +58,8 @@ router.get('/bluelytics', cache('60 minutes'), async function (req, res) {
 router.get('/ve/ha/price', cache('45 minutes'), async function (req, res) {
     let priority = [
         dmonitor,
-        dtoday
+        dtoday,
+        bcv
     ]
     let usdPrice = 0.0;
     // sorry, i did not want to use FOR but i had to :(
