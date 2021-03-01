@@ -6,6 +6,7 @@ let cache = apicache.middleware;
 
 const self = require("../modules/app/selfCalls");
 const utils = require("../modules/app/utils");
+const { dtodayPrice } = require('../modules/app/selfCalls');
 
 router.post('/dashboard', async function (req, res) {
 
@@ -79,6 +80,21 @@ router.post('/dashboard', async function (req, res) {
   currency.push(gold);
 
   res.json(currency);
+});
+
+router.get('/fiat/ves/prices', async function (req, res) {
+  const [dtoday, dmonitor, bcv] = await Promise.all([
+    self.dtodayPrice(),
+    self.dmonitorPrice(),
+    self.bcvPrice()
+  ]);
+
+  let prices = [
+    { name: "dtoday", "price": dtoday },
+    { name: "dmonitor", "price": dmonitor },
+    { name: "bcv", "price": bcv },
+  ]
+  res.json(prices);
 });
 
 module.exports = router;

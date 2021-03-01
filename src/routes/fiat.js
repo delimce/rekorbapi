@@ -8,7 +8,7 @@ let router = express.Router();
 const apicache = require('apicache');
 let cache = apicache.middleware;
 
-router.get('/dtoday', async function (req, res) {
+router.get('/dtoday', cache('45 minutes'), async function (req, res) {
     let info = await dtoday.getUsdPrice()
     res.json(info);
 });

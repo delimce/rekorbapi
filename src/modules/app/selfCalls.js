@@ -9,7 +9,7 @@ const MAX_TIMEOUT = 5000;
 
 module.exports =
 {
-    dtodayInfo: async function () {
+    async dtodayInfo() {
         let result = await axios({
             method: 'get',
             timeout: MAX_TIMEOUT,
@@ -17,7 +17,7 @@ module.exports =
         })
         return result.data;
     },
-    floatrates: async function () {
+    async floatrates() {
         let result = await axios({
             method: 'get',
             timeout: MAX_TIMEOUT,
@@ -25,11 +25,35 @@ module.exports =
         })
         return result.data;
     },
-    cmcAll: async function () {
+    async cmcAll() {
         let result = await axios({
             method: 'get',
             timeout: MAX_TIMEOUT,
             url: base + 'crypto/cmc/all'
+        })
+        return result.data;
+    },
+    async dtodayPrice() {
+        let result = await axios({
+            method: 'get',
+            timeout: MAX_TIMEOUT,
+            url: base + 'fiat/dtoday'
+        })
+        return result.data;
+    },
+    async dmonitorPrice() {
+        let result = await axios({
+            method: 'get',
+            timeout: MAX_TIMEOUT,
+            url: base + 'fiat/dmonitor'
+        })
+        return result.data;
+    },
+    async bcvPrice() {
+        let result = await axios({
+            method: 'get',
+            timeout: MAX_TIMEOUT,
+            url: base + 'fiat/bcv'
         })
         return result.data;
     }
