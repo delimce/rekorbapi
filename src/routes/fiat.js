@@ -8,17 +8,17 @@ let router = express.Router();
 const apicache = require('apicache');
 let cache = apicache.middleware;
 
-router.get('/dtoday', cache('45 minutes'), async function (req, res) {
-    let info = await dtoday.getUsdPrice()
-    res.json(info);
-});
+// higher-order function returns false for responses of other status codes (e.g. 403, 404, 500, etc)
+const onlyStatus200 = (req, res) => res.statusCode === 200;
+const isPriceNotZero = (price) => Number(price) > 0;
+const cacheSuccesses = cache('45 minutes', onlyStatus200);
 
-router.get('/dtoday/info', cache('45 minutes'), async function (req, res) {
+router.get('/dtoday/info', cacheSuccesses, async function (req, res) {
     let info = await dtoday.getInfo()
     res.json(info);
 });
 
-router.get('/dtoday/:name', cache('45 minutes'), async function (req, res) {
+router.get('/dtoday/:name', cacheSuccesses, async function (req, res) {
     let id = await dtoday.getIdByCurrencyName(req.params.name);
     let info = await dtoday.getById(id);
     if (!info) {
@@ -29,14 +29,36 @@ router.get('/dtoday/:name', cache('45 minutes'), async function (req, res) {
     }
 });
 
-router.get('/dmonitor', cache('45 minutes'), async function (req, res) {
-    let info = await dmonitor.getUsdPrice()
-    res.json(info);
+
+router.get('/dtoday', cacheSuccesses, async function (req, res) {
+    let info = await dtoday.getUsdPrice()
+    if (isPriceNotZero(info)) {
+        res.json(info);
+    } else {
+        res.status(500);
+        res.json({ "error": "invalid price" });
+    }
+
 });
 
-router.get('/bcv', cache('45 minutes'), async function (req, res) {
+router.get('/dmonitor', cacheSuccesses, async function (req, res) {
+    let info = await dmonitor.getUsdPrice()
+    if (isPriceNotZero(info)) {
+        res.json(info);
+    } else {
+        res.status(500);
+        res.json({ "error": "invalid price" });
+    }
+});
+
+router.get('/bcv', cacheSuccesses, async function (req, res) {
     let info = await bcv.getUsdPrice()
-    res.json(info);
+    if (isPriceNotZero(info)) {
+        res.json(info);
+    } else {
+        res.status(500);
+        res.json({ "error": "invalid price" });
+    }
 });
 
 router.get('/floatrates', cache('60 minutes'), async function (req, res) {
@@ -55,7 +77,7 @@ router.get('/bluelytics', cache('60 minutes'), async function (req, res) {
 /**
  * high availability dollar to ves price
  */
-router.get('/ve/ha/price', cache('45 minutes'), async function (req, res) {
+router.get('/ve/ha/price', cacheSuccesses, async function (req, res) {
     let priority = [
         dmonitor,
         dtoday,
@@ -73,7 +95,13 @@ router.get('/ve/ha/price', cache('45 minutes'), async function (req, res) {
             continue;
         }
     }
-    res.json(usdPrice);
+
+    if (isPriceNotZero(usdPrice)) {
+        res.json(usdPrice);
+    } else {
+        res.status(500);
+        res.json({ "error": "invalid price" });
+    }
 });
 
 module.exports = router;
