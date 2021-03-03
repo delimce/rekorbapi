@@ -11,6 +11,14 @@ let cache = apicache.middleware;
 // higher-order function returns false for responses of other status codes (e.g. 403, 404, 500, etc)
 const onlyStatus200 = (req, res) => res.statusCode === 200;
 const isPriceNotZero = (price) => Number(price) > 0;
+const errorHandler = (price, res) => {
+    if (isPriceNotZero(price)) {
+        res.json(price);
+    } else {
+        res.status(500);
+        res.json({ "error": "invalid price" });
+    }
+}
 const cacheSuccesses = cache('45 minutes', onlyStatus200);
 
 router.get('/dtoday/info', cacheSuccesses, async function (req, res) {
@@ -31,34 +39,18 @@ router.get('/dtoday/:name', cacheSuccesses, async function (req, res) {
 
 
 router.get('/dtoday', cacheSuccesses, async function (req, res) {
-    let info = await dtoday.getUsdPrice()
-    if (isPriceNotZero(info)) {
-        res.json(info);
-    } else {
-        res.status(500);
-        res.json({ "error": "invalid price" });
-    }
-
+    let info = await dtoday.getUsdPrice();
+    errorHandler(info, res);
 });
 
 router.get('/dmonitor', cacheSuccesses, async function (req, res) {
     let info = await dmonitor.getUsdPrice()
-    if (isPriceNotZero(info)) {
-        res.json(info);
-    } else {
-        res.status(500);
-        res.json({ "error": "invalid price" });
-    }
+    errorHandler(info, res);
 });
 
 router.get('/bcv', cacheSuccesses, async function (req, res) {
     let info = await bcv.getUsdPrice()
-    if (isPriceNotZero(info)) {
-        res.json(info);
-    } else {
-        res.status(500);
-        res.json({ "error": "invalid price" });
-    }
+    errorHandler(info, res);
 });
 
 router.get('/floatrates', cache('60 minutes'), async function (req, res) {
@@ -95,13 +87,7 @@ router.get('/ve/ha/price', cacheSuccesses, async function (req, res) {
             continue;
         }
     }
-
-    if (isPriceNotZero(usdPrice)) {
-        res.json(usdPrice);
-    } else {
-        res.status(500);
-        res.json({ "error": "invalid price" });
-    }
+    errorHandler(usdPrice, res);
 });
 
 module.exports = router;
