@@ -11,9 +11,9 @@ app.use(bodyParser.parsers);
 app.use(express.static('public'));
 
 // Routes
-const crypto = require('./routes/crypto');
+const crypto = require('./routes/crypto/cmc');
 const fiat = require('./routes/fiat');
-const trades = require('./routes/trades');
+const trades = require('./routes/crypto/localbtc');
 const rekorbit = require('./routes/app');
 app.use('/crypto', crypto);
 app.use('/fiat', fiat);

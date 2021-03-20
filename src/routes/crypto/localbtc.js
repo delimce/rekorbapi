@@ -2,7 +2,7 @@ const express = require('express');
 
 let router = express.Router();
 
-const localbtc = require("../modules/crypto/localbtc");
+const localbtc = require("../../modules/crypto/localbtc");
 
 
 router.get('/localbtc/posts/currency/:cur', async function (req, res) {

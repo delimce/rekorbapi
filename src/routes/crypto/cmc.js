@@ -1,6 +1,6 @@
 const express = require('express');
 let router = express.Router();
-const cmc = require("../modules/crypto/coinmarketcap");
+const cmc = require("../../modules/crypto/coinmarketcap");
 const apicache = require('apicache');
 let cache = apicache.middleware;
 
