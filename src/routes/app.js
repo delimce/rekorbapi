@@ -32,6 +32,7 @@ router.post('/dashboard', async function (req, res) {
       typrice_btc: "crypto",
       price_btc: utils.getQuantityRelBTC(btcCoin, el),
       price_usd: el.price_usd,
+      price_eur: el.price_usd / floa_euro.inverseRate,
       percent4rent: el.percent4rent,
       profit: el.profit,
       image: utils.getSVGimage(el.symbol.toLowerCase())
