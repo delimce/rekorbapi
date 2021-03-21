@@ -29,5 +29,8 @@ module.exports =
             svg = fs.readFileSync("./public/svg/auto.svg", 'utf-8');
         }
         return svg64(svg);
+    },
+    getGeckoRequest(result) {
+        return (result.success) ? result.data : false;
     }
 }

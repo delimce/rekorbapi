@@ -11,11 +11,12 @@ app.use(bodyParser.parsers);
 app.use(express.static('public'));
 
 // Routes
-const crypto = require('./routes/crypto/cmc');
+const cmc = require('./routes/crypto/cmc');
+const gecko = require('./routes/crypto/gecko');
 const fiat = require('./routes/fiat');
 const trades = require('./routes/crypto/localbtc');
 const rekorbit = require('./routes/app');
-app.use('/crypto', crypto);
+app.use('/crypto', [cmc,gecko]);
 app.use('/fiat', fiat);
 app.use('/trades', trades);
 app.use('/app', rekorbit);
