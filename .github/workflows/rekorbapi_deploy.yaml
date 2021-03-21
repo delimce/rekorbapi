@@ -20,7 +20,6 @@ jobs:
             git checkout .
             git pull origin main
             npm install
-            sh /home/delimce/pm2grant.sh
             pm2 restart rekorbapi
 
 
