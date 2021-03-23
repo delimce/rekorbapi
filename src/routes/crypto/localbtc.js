@@ -45,8 +45,8 @@ const localbtcLocation = function (params, posts) {
 
   if (params.bank != undefined && params.bank.trim() != "") {
     final = final.filter((post) => {
-      return post.bank.toLowerCase().includes(params.bank.toLowerCase())
-        || post.msg.toLowerCase().includes(params.bank.toLowerCase())
+      return (post.bank && post.bank.trim().toLowerCase().includes(params.bank.toLowerCase()))
+        || (post.msg && post.msg.trim().toLowerCase().includes(params.bank.toLowerCase()))
     })
   }
   return final;
