@@ -29,5 +29,8 @@ module.exports =
             svg = fs.readFileSync("./public/svg/auto.svg", 'utf-8');
         }
         return svg64(svg);
+    },
+    getPriceCurrencyInUSD(price) {
+        return (price) ? Number(1.0 / price) : 0.0;
     }
 }

@@ -12,17 +12,20 @@ router.post('/dashboard', async function (req, res) {
 
   let coins = await req.body;
   //multiple call
-  const [coinMarketCap, dolartoday, floatrates] = await Promise.all([
+  const [coinMarketCap, dolartoday, floatrates, bluelytics] = await Promise.all([
     self.cmcAll(),
     self.dtodayInfo(),
-    self.floatrates()
+    self.floatrates(),
+    self.bluelyticsPrice()
   ]);
 
   let selectedCoins = await utils.findCoins(coinMarketCap, coins)
-  let price_gold_gram = await utils.goldPriceGram(dolartoday.GOLD.rate);
+  let price_gold_gram = utils.goldPriceGram(dolartoday.GOLD.rate);
   let btcCoin = await selectedCoins.find(el => { return el.symbol === "BTC" });
   let floa_euro = await floatrates.find(el => { return el.code === "EUR" });
-  let floa_ars = await floatrates.find(el => { return el.code === "ARS" });
+  let blue_ars = await bluelytics.find(el => { return el.name === "blue" });
+  let ars_price = utils.getPriceCurrencyInUSD(blue_ars.price_sell);
+  // let floa_ars = await floatrates.find(el => { return el.code === "ARS" });
   let currency = selectedCoins.map(el => {
     return {
       id: el.id,
@@ -64,8 +67,8 @@ router.post('/dashboard', async function (req, res) {
     id: "arg",
     symbol: "ARS",
     type: "fiat",
-    price_bs: Number(floa_ars.inverseRate * dolartoday.USD.dolartoday),
-    price_usd: floa_ars.inverseRate
+    price_bs: Number(ars_price * dolartoday.USD.dolartoday),
+    price_usd: ars_price
   };
 
   currency.push(arg);

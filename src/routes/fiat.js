@@ -53,7 +53,7 @@ router.get('/bcv', cacheSuccesses, async function (req, res) {
     errorHandler(info, res);
 });
 
-router.get('/floatrates', cache('60 minutes'), async function (req, res) {
+router.get('/floatrates', cache('120 minutes'), async function (req, res) {
     let info = await floatrates.getInfoFiats()
     res.json(info);
 });
@@ -61,7 +61,7 @@ router.get('/floatrates', cache('60 minutes'), async function (req, res) {
 /**
  * Arg currency
  */
-router.get('/bluelytics', cache('60 minutes'), async function (req, res) {
+router.get('/bluelytics', cache('120 minutes'), async function (req, res) {
     let info = await bluelytics.getInfoArg()
     res.json(info);
 });

@@ -56,5 +56,13 @@ module.exports =
             url: base + 'fiat/bcv'
         })
         return result.data;
-    }
+    },
+    async bluelyticsPrice() {
+        let result = await axios({
+            method: 'get',
+            timeout: MAX_TIMEOUT,
+            url: base + 'fiat/bluelytics'
+        })
+        return result.data;
+    },
 }
