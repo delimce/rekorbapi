@@ -26,10 +26,9 @@ module.exports =
             return coinMarketCap.data.data;
         } catch (error) {
             console.log(error)
+            return false;
         }
     },
-
-
     getById: async function (id) {
         let coinMarketCap = {}
         let detail = {};

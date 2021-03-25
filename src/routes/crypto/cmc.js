@@ -11,14 +11,13 @@ const cacheSuccesses = cache('5 minutes', onlyStatus200)
 
 router.get('/cmc/all', cacheSuccesses, async function (req, res) {
   let info = await cmc.getAll();
-  let final = await cmc.shorInfoCoins(info);
-  if (final.length > 1) {
+  if (info && info.length > 1) {
+    let final = await cmc.shorInfoCoins(info);
     res.json(final);
   } else {
     res.status(503);
     res.render('error', { error: "service not available" });
   }
-
 });
 
 router.get('/cmc/detail/:id', cacheSuccesses, async function (req, res) {
