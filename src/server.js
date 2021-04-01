@@ -10,6 +10,10 @@ app.use(bodyParser.parsers);
 
 app.use(express.static('public'));
 
+//database
+const mongodb = require("./middlewares/database");
+mongodb.connect()
+
 // Routes
 const cmc = require('./routes/crypto/cmc');
 const gecko = require('./routes/crypto/gecko');
