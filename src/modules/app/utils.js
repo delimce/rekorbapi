@@ -32,5 +32,8 @@ module.exports =
     },
     getPriceCurrencyInUSD(price) {
         return (price) ? Number(1.0 / price) : 0.0;
+    },
+    getGeckoRequest(result) {
+        return (result.success) ? result.data : false;
     }
 }
