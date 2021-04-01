@@ -10,7 +10,7 @@ const options = {
     useUnifiedTopology: true,
     useCreateIndex: true,
     useFindAndModify: false,
-    autoIndex: false, // Don't build indexes
+    autoIndex: true,
     poolSize: 5, // Maintain up to 5 socket connections
     serverSelectionTimeoutMS: 5000, // Keep trying to send operations for 5 seconds
     socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
