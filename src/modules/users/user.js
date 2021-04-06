@@ -26,10 +26,7 @@ module.exports = {
     },
     async activate(email, token) {
         try {
-            let result = await User.findOne({ email: email, token: token });
-            result.active = true;
-            result.token = null;
-            result.save();
+            await User.findOneAndUpdate({ email: email, token: token }, { active: true, token: null });
             return utils.setMongooseResponse(true);
         } catch (err) {
             return utils.setMongooseResponse(false, err.message);
@@ -37,7 +34,7 @@ module.exports = {
     },
     async isActive(id) {
         try {
-            let result = await User.findById(id)
+            let result = (await User.findById(id)).toObject()
             return result.active;
         } catch (err) {
             return false;

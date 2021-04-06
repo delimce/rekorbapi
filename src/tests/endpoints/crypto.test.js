@@ -1,4 +1,4 @@
-const app = require('../server') // Link to your server file
+const app = require('../../server') // Link to your server file
 const supertest = require('supertest')
 const request = supertest(app)
 
@@ -33,7 +33,6 @@ describe('Crypto CMC endpoints Test', () => {
             ["bitcoin","litecoin"]
         )
         let result = await res.body;
-        // await JSON.parse(res.body.toString());
         expect(typeof result.bitcoin.usd).toBe('number')
         expect(typeof result.litecoin.usd).toBe('number')
         done()
