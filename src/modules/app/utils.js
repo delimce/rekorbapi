@@ -35,5 +35,16 @@ module.exports =
     },
     getGeckoRequest(result) {
         return (result.success) ? result.data : false;
+    },
+    anyElementsInText(mytext, elements) {
+        const keys = elements.split(",");
+        let result = false;
+        keys.forEach(el => {
+            if (mytext.includes(el.trim())) {
+                result = true;
+                return;
+            }
+        });
+        return result;
     }
 }

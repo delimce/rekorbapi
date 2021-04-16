@@ -3,6 +3,7 @@ const express = require('express');
 let router = express.Router();
 
 const localbtc = require("../../modules/crypto/localbtc");
+const utils = require("../../modules/app/utils");
 
 
 router.get('/localbtc/posts/currency/:cur', async function (req, res) {
@@ -10,8 +11,8 @@ router.get('/localbtc/posts/currency/:cur', async function (req, res) {
   let posts = await localbtc.getTradingPostsByCurrency(params.type, req.params.cur, params.page);
   let final = posts.results.filter((post) => {
     return (post.country == params.location.toUpperCase()
-      && (post.bank && post.bank.toLowerCase().includes(params.bank.toLowerCase()))
-      || (post.msg && post.msg.toLowerCase().includes(params.bank.toLowerCase())))
+      && (post.bank && utils.anyElementsInText(post.bank.toLowerCase(),params.bank.toLowerCase()))
+      || (post.msg && utils.anyElementsInText(post.msg.toLowerCase(),params.bank.toLowerCase())))
       && (params.amount >= post.min && params.amount <= post.max)
   })
   res.json(final);
@@ -45,8 +46,8 @@ const localbtcLocation = function (params, posts) {
 
   if (params.bank != undefined && params.bank.trim() != "") {
     final = final.filter((post) => {
-      return (post.bank && post.bank.trim().toLowerCase().includes(params.bank.toLowerCase()))
-        || (post.msg && post.msg.trim().toLowerCase().includes(params.bank.toLowerCase()))
+      return (post.bank && utils.anyElementsInText(post.bank.toLowerCase(),params.bank.toLowerCase()))
+        || (post.msg && utils.anyElementsInText(post.msg.toLowerCase(),params.bank.toLowerCase()))
     })
   }
   return final;
