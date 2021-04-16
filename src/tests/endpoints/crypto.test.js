@@ -24,7 +24,7 @@ describe('Crypto CMC endpoints Test', () => {
  
     it('Should get a crypto assets array gecko', async done => {
         const res = await request.get('/crypto/gecko/list')
-        expect(res.body.length>50).toBe(true)
+        expect(res.body.length>60).toBe(true)
         done()
       })
 

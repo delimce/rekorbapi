@@ -4,8 +4,10 @@ const userModule = require('../../modules/users/user') // model to test
 describe('Users module database Test', () => {
 
     // prepare testing database methods
-    database.setupDB()
+    beforeAll(async () => database.dbConnect());
+    afterAll(async () => database.dbDisconnect());
 
+    
     const userFake = {
         name: "test user",
         email: "user@testing.com",

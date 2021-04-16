@@ -37,6 +37,15 @@ router.get('/localbtc/trader/:username', async function (req, res) {
   res.json(trader);
 });
 
+router.post('/localbtc/new', async function (req, res) {
+  let data = await req.body;
+  let result = await localbtc.saveNewTrade(data);
+  if (!result.success) {
+    res.status(400);
+  }
+  res.json(result);
+});
+
 const localbtcLocation = function (params, posts) {
   let final = posts.results.filter((post) => {
     return post.currency == params.currency.toUpperCase()

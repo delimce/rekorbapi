@@ -1,12 +1,17 @@
 [
     {
-        "id":"usd",
-        "name":"Dollar",
-        "order":1
+        "id": "usd",
+        "name": "Dollar",
+        "order": 1
     },
     {
-        "id":"eur",
-        "name":"Euro",
-        "order":2
+        "id": "eur",
+        "name": "Euro",
+        "order": 2
+    },
+    {
+        "id": "ves",
+        "name": "Bolviar S.",
+        "order": 3
     }
 ]

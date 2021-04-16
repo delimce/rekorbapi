@@ -1,5 +1,4 @@
 'use stricts'
-const { createCatchClause, toEditorSettings } = require('typescript');
 const User = require('../../models/user');
 
 const utils = require('../app/utils');

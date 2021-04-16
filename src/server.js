@@ -2,7 +2,7 @@ require('dotenv').config()
 
 const express = require('express')
 const app = express()
-const port = process.env.SERVER_PORT
+const port = process.env.SERVER_PORT || 8080;
 
 //middlewares
 const bodyParser = require("./middlewares/bodyParser.js");
