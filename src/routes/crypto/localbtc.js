@@ -1,4 +1,5 @@
 const express = require('express');
+const auth = require('../../middlewares/auth');
 
 let router = express.Router();
 
@@ -37,7 +38,7 @@ router.get('/localbtc/trader/:username', async function (req, res) {
   res.json(trader);
 });
 
-router.post('/localbtc/new', async function (req, res) {
+router.post('/localbtc/new', auth, async function (req, res) {
   let data = await req.body;
   let result = await localbtc.saveNewTrade(data);
   if (!result.success) {
