@@ -29,8 +29,8 @@ const localBtcSchema = new Schema({
     timezone: {
         type: String,
     },
-    intent:{
-        type:Number,
+    intent: {
+        type: Number,
         default: 0
     },
     notified: {
@@ -40,6 +40,10 @@ const localBtcSchema = new Schema({
     finished: {
         type: Boolean,
         default: false
+    },
+    user: {
+        type: Map,
+        of: String
     },
 }, { timestamps: true });
 const LocalBtc = mongoose.model('LocalBtc', localBtcSchema);

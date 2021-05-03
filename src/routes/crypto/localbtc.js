@@ -40,7 +40,8 @@ router.get('/localbtc/trader/:username', async function (req, res) {
 
 router.post('/localbtc/new', auth, async function (req, res) {
   let data = await req.body;
-  let result = await localbtc.saveNewTrade(data);
+  const token = req.headers["x-access-token"] || req.headers["authorization"];
+  let result = await localbtc.saveNewTradeWithUser(data, token);
   if (!result.success) {
     res.status(400);
   }
