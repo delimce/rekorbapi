@@ -46,5 +46,15 @@ module.exports =
             }
         });
         return result;
+    },
+    setMongooseResponse(result, msg = "ok", data = {}) {
+        let info = { success: true, message: msg };
+        if (!result) {
+            info.success = false;
+            info.message = (msg === "ok") ? "error" : msg;
+        } else {
+            info.data = data
+        }
+        return info;
     }
 }
