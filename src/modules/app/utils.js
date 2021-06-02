@@ -13,11 +13,11 @@ module.exports =
         const gramxOz = 0.035274;
         return gramxOz * oz_price
     },
-    getQuantityRelBTC(btc, altcoin) {
+    getQuantityRelBTC(btc, altCoin) {
         let finalPrice =
-            altcoin.symbol === "BTC"
+            altCoin.symbol === "BTC"
                 ? 1
-                : Number(altcoin.price_usd / btc.price_usd).toFixed(8);
+                : Number(altCoin.price_usd / btc.price_usd).toFixed(8);
         return Number(finalPrice);
     },
     getSVGimage(image) {
@@ -36,11 +36,11 @@ module.exports =
     getGeckoRequest(result) {
         return (result.success) ? result.data : false;
     },
-    anyElementsInText(mytext, elements) {
+    anyElementsInText(myText, elements) {
         const keys = elements.split(",");
         let result = false;
         keys.forEach(el => {
-            if (mytext.includes(el.trim())) {
+            if (myText.includes(el.trim())) {
                 result = true;
                 return;
             }

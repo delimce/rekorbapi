@@ -5,4 +5,5 @@ Api based in nodejs/express to provide resources to rekorbit mobile app
 ## Stack:
 * Nodejs 12
 * Express 4.17
+* Mongoose 5.12
 * jest + supertest

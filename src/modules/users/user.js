@@ -17,16 +17,14 @@ module.exports = {
     },
     async getById(id) {
         try {
-            let result = await User.findById(id)
-            return result
+            return await User.findById(id)
         } catch (err) {
             return false
         }
     },
     async getByToken(token) {
         try {
-            let result = (await User.findOne({ token: token })).toObject()
-            return result
+            return (await User.findOne({ token: token })).toObject()
         } catch (err) {
             return false
         }

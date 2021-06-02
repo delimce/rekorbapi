@@ -23,7 +23,7 @@ describe('Users module database Test', () => {
 
     it('Should to activate an user', async done => {
         let result = await userModule.insert(userFake)
-        let data = await result.data.toObject()
+        let data = await result.data;
         await userModule.activate(data.email, data.token)
         let myUser = await userModule.getById(data._id);
         let isActive = await userModule.isActive(myUser.token)
