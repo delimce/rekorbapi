@@ -12,8 +12,8 @@ router.get('/localbtc/posts/currency/:cur', async function (req, res) {
   let posts = await localbtc.getTradingPostsByCurrency(params.type, req.params.cur, params.page);
   let final = posts.results.filter((post) => {
     return (post.country == params.location.toUpperCase()
-      && (post.bank && utils.anyElementsInText(post.bank.toLowerCase(),params.bank.toLowerCase()))
-      || (post.msg && utils.anyElementsInText(post.msg.toLowerCase(),params.bank.toLowerCase())))
+      && (post.bank && utils.anyElementsInText(post.bank.toLowerCase(), params.bank.toLowerCase()))
+      || (post.msg && utils.anyElementsInText(post.msg.toLowerCase(), params.bank.toLowerCase())))
       && (params.amount >= post.min && params.amount <= post.max)
   })
   res.json(final);
@@ -35,8 +35,14 @@ router.put('/localbtc/posts/location/:code', async function (req, res) {
 });
 
 router.get('/localbtc/trader/:username', async function (req, res) {
-  let trader = await localbtc.getTraderProfile(req.params.username)
-  res.json(trader);
+  try {
+    let trader = await localbtc.getTraderProfile(req.params.username)
+    res.json(trader);
+  } catch (err) {
+    res.status(400);
+    res.send("trader not found");
+  }
+
 });
 
 router.post('/localbtc/new', auth, async function (req, res) {
@@ -57,8 +63,8 @@ const localbtcLocation = function (params, posts) {
 
   if (params.bank != undefined && params.bank.trim() != "") {
     final = final.filter((post) => {
-      return (post.bank && utils.anyElementsInText(post.bank.toLowerCase(),params.bank.toLowerCase()))
-        || (post.msg && utils.anyElementsInText(post.msg.toLowerCase(),params.bank.toLowerCase()))
+      return (post.bank && utils.anyElementsInText(post.bank.toLowerCase(), params.bank.toLowerCase()))
+        || (post.msg && utils.anyElementsInText(post.msg.toLowerCase(), params.bank.toLowerCase()))
     })
   }
   return final;
