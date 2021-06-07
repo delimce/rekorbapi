@@ -1,6 +1,7 @@
 'use strict';
 const svg64 = require('svg64');
 const fs = require("fs");
+const countries = require('../../../public/enums/countries.json')
 
 module.exports =
 {
@@ -8,6 +9,9 @@ module.exports =
         return cmcCoins.filter((el) => {
             return coins.includes(el.symbol);
         })
+    },
+    getCountryByCode(code) {
+        return countries.find(el => el.cod === String(code));
     },
     goldPriceGram(oz_price) {
         const gramxOz = 0.035274;

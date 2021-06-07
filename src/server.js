@@ -21,12 +21,14 @@ const fiat = require('./routes/fiat');
 const trades = require('./routes/crypto/localbtc');
 const rekorbit = require('./routes/app');
 const users = require('./routes/users');
+const robots = require('./routes/robots');
 
 app.use('/crypto', [cmc,gecko]);
 app.use('/fiat', fiat);
 app.use('/trades', trades);
 app.use('/app', rekorbit);
 app.use('/users', users);
+app.use('/robots', robots);
 
 //modules
 const errorHandler = require('./middlewares/errors');

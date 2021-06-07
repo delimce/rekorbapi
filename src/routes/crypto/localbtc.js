@@ -11,7 +11,7 @@ router.get('/localbtc/posts/currency/:cur', async function (req, res) {
   let params = await req.body;
   let posts = await localbtc.getTradingPostsByCurrency(params.type, req.params.cur, params.page);
   let final = posts.results.filter((post) => {
-    return (post.country == params.location.toUpperCase()
+    return (post.country === params.location.toUpperCase()
       && (post.bank && utils.anyElementsInText(post.bank.toLowerCase(), params.bank.toLowerCase()))
       || (post.msg && utils.anyElementsInText(post.msg.toLowerCase(), params.bank.toLowerCase())))
       && (params.amount >= post.min && params.amount <= post.max)

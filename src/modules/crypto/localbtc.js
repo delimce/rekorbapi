@@ -1,7 +1,7 @@
 'use strict';
 const axios = require('axios');
 const date = require("date-and-time");
-const LocalBtc = require('../../models/localBtc');
+const LocalBtcModel = require('../../models/localBtc');
 const userModule = require('../../modules/users/user');
 const utils = require('../app/utils');
 const BASE_URL = "https://localbitcoins.com/";
@@ -89,7 +89,7 @@ module.exports =
         let local = String(location);
         let name = String(country);
         let current = page > 1 && page != undefined ? "?page=" + Number(page) : "";
-        let trade = op.toLowerCase() == "sell" ? "sell" : "buy";
+        let trade = op.toLowerCase() === "sell" ? "sell" : "buy";
 
         let url_localbtc =
             BASE_URL +
@@ -121,7 +121,7 @@ module.exports =
     },
     saveNewTrade: async function (lbtcTrade) {
         try {
-            const lbtc = new LocalBtc(lbtcTrade);
+            const lbtc = new LocalBtcModel(lbtcTrade);
             let result = await lbtc.save();
             return utils.setMongooseResponse(true, "trade created", result);
         } catch (err) {
@@ -136,8 +136,7 @@ module.exports =
             data.name = user.name;
             data.email = user.email;
             lbtcTrade.user = data;
-            let result = await this.saveNewTrade(lbtcTrade);
-            return result;
+            return this.saveNewTrade(lbtcTrade);
         }
     }
 

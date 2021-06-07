@@ -29,7 +29,7 @@ const localBtcSchema = new Schema({
     timezone: {
         type: String,
     },
-    intent: {
+    attempt: {
         type: Number,
         default: 0
     },
