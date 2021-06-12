@@ -18,7 +18,7 @@ const options = {
 };
 
 // todo: connect without user and password
-const dbUri = "mongodb://" + host + ":" + port + "/" + db;
+const dbUri = "mongodb://" + host + ":" + port + "/" + db + "?retryWrites=true&w=majority";
 
 module.exports = {
     connect() {

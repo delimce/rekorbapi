@@ -26,10 +26,9 @@ module.exports = {
                 let updateData = { attempt: el.attempt + 1 }
                 if (postData) {
                     //notify user
-                    let userEmail = el.user.get('email')
                     updateData.notified = true;
                     state.notified += 1;
-                    this.notifyWithEmail(postData, userEmail);
+                    this.notifyWithEmail(postData, el);
                 }
                 //saving attempt & status
                 await localBtcModel.findByIdAndUpdate({ _id: el._id }, updateData);
@@ -89,11 +88,20 @@ module.exports = {
             (this.getPercentageFeeBtc(post.price, btcPrice) <= search.fee)
             : (this.getPercentageFeeBtc(post.price, btcPrice) >= (search.fee * -1));
     },
-    notifyWithEmail: async function (post, userEmail) {
+    notifyWithEmail: async function (post, search) {
         email.setSubject("Your Localbitcoins post has been Found");
-        email.setTo(userEmail);
+        email.setTo(search.user.get('email'));
+        const emailData = {
+            url:post.url,
+            country:post.country,
+            currency:post.currency,
+            type:post.type,
+            price:post.price,
+            priceRequested:search.price,
+            name:search.user.get('name')
+        }
         let template = jsrender.templates('./src/templates/emails/lbtcposts.html');
-        let html = template.render(post);
+        let html = template.render(emailData);
         email.setHtml(html);
         await email.send();
     }
