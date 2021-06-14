@@ -76,13 +76,15 @@ router.get('/ve/ha/price', cacheSuccesses, async function (req, res) {
         bcv
     ]
     let usdPrice = 0.0;
-    // sorry, i did not want to use FOR but i had to :(
-    for (let i = 0; i < priority.length; i++) {
+    let i = 0;
+    // sorry, i did not want to use WHILE but i had to :(
+    while (i < priority.length) {
         try {
             usdPrice = await priority[i].getUsdPrice();
             if (Number(usdPrice) > 0) {
                 break;
             }
+            i++;
         } catch (err) {
             continue;
         }
