@@ -22,7 +22,6 @@ module.exports = {
                 const data = await this.getPriceByCode(el);
                 await pricesModule.newOrUpdate(el, data);
                 state.updated++;
-
             } catch (err) {
 
             } finally {
