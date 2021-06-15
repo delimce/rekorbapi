@@ -63,7 +63,7 @@ module.exports = {
                 price = btcPriceData.bitcoin[currency];
                 break;
             case currencies[2].id://ves
-                let vesFactor = await dtoday.getUsdPrice();
+                let vesFactor = await dtoday.getUsdPriceFromDb();
                 price = Number(btcPriceData.bitcoin[currencies[0].id]) * vesFactor;
                 break;
             default:
@@ -97,7 +97,9 @@ module.exports = {
             currency:post.currency,
             type:post.type,
             price:post.price,
-            priceRequested:search.price,
+            price2:search.amount,
+            title:post.bank,
+            msg:post.msg,
             name:search.user.get('name')
         }
         let template = jsrender.templates('./src/templates/emails/lbtcposts.html');
