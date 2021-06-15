@@ -23,9 +23,9 @@ const dbUri = "mongodb://" + host + ":" + port + "/" + db + "?retryWrites=true&w
 module.exports = {
     connect() {
         mongoose.connect(dbUri, options).then(
-            () => { console.log('database ' + db + ' conected'); },
+            () => { console.log('database ' + db + ' connected'); },
             err => {
-                console.log('databse connection error');
+                console.log('database connection error');
                 console.log(err);
             }
         );

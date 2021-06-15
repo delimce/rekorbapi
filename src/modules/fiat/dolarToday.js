@@ -2,6 +2,7 @@
 
 const axios = require('axios');
 const currencies = require('../../../public/enums/currencies.json');
+const priceModel = require('../../models/fiatPrices');
 
 module.exports =
 {
@@ -30,6 +31,10 @@ module.exports =
     getIdByCurrencyName(name) {
         let currency = currencies.find(el => el.name.toLowerCase() == name.toLowerCase())
         return (currency) ? currency.id.toUpperCase() : name.toUpperCase()
+    },
+    async getUsdPriceFromDb() {
+        const today = await priceModel.findOne({ code: "DTODAY" }).exec();
+        return (today) ? today.price : 0.0;
     }
 
 }
