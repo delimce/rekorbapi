@@ -1,12 +1,8 @@
 const express = require('express');
 let router = express.Router();
 
-const apicache = require('apicache');
-let cache = apicache.middleware;
-
 const self = require("../modules/app/selfCalls");
 const utils = require("../modules/app/utils");
-const { dtodayPrice } = require('../modules/app/selfCalls');
 const priceModel = require('../models/fiatPrices');
 
 router.post('/dashboard', async function (req, res) {
@@ -33,7 +29,6 @@ router.post('/dashboard', async function (req, res) {
       cmc_id: el.cmc_id,
       symbol: el.symbol,
       type: "crypto",
-      typrice_btc: "crypto",
       price_btc: utils.getQuantityRelBTC(btcCoin, el),
       price_usd: el.price_usd,
       price_eur: el.price_usd / floa_euro.inverseRate,
@@ -43,45 +38,16 @@ router.post('/dashboard', async function (req, res) {
     };
   })
 
-  //dolartoday data
-  let dollar = {
-    id: "dollar",
-    symbol: "USD",
-    type: "fiat",
-    price_bs: Number(dolartoday.USD.dolartoday),
-    price_usd: 1
-  };
-
+  let dollar = utils.setFiatObject("dollar", "USD", "fiat", Number(dolartoday.USD.dolartoday), 1);
   currency.push(dollar);
 
-  let euro = {
-    id: "euro",
-    symbol: "EUR",
-    type: "fiat",
-    price_bs: Number(dolartoday.EUR.dolartoday),
-    price_usd: floa_euro.inverseRate
-  };
-
+  let euro = utils.setFiatObject("euro", "EUR", "fiat", Number(dolartoday.EUR.dolartoday), floa_euro.inverseRate);
   currency.push(euro);
 
-  let arg = {
-    id: "arg",
-    symbol: "ARS",
-    type: "fiat",
-    price_bs: Number(ars_price * dolartoday.USD.dolartoday),
-    price_usd: ars_price
-  };
-
+  let arg = utils.setFiatObject("arg", "ARS", "fiat", Number(ars_price * dolartoday.USD.dolartoday), ars_price);
   currency.push(arg);
 
-  let gold = {
-    id: "gold",
-    symbol: "GOLD",
-    type: "commodity",
-    price_bs: Number(dolartoday.USD.dolartoday * price_gold_gram),
-    price_usd: Number(price_gold_gram)
-  };
-
+  let gold = utils.setFiatObject("gold", "GOLD", "commodity", Number(dolartoday.USD.dolartoday * price_gold_gram), Number(price_gold_gram));
   currency.push(gold);
 
   res.json(currency);
