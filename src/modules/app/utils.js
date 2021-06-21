@@ -60,14 +60,5 @@ module.exports =
             info.data = data
         }
         return info;
-    },
-    setFiatObject(id, symbol, type, pricesVes, priceUsd) {
-        return {
-            id: id,
-            symbol: symbol,
-            type: type,
-            price_bs: pricesVes,
-            price_usd: priceUsd
-        }
     }
 }
