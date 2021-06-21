@@ -3,7 +3,9 @@ let router = express.Router();
 
 const self = require("../modules/app/selfCalls");
 const utils = require("../modules/app/utils");
+const dashboard = require("../modules/app/dashboard");
 const priceModel = require('../models/fiatPrices');
+const prices = require('../modules/fiat/prices')
 
 router.post('/dashboard', async function (req, res) {
 
@@ -22,36 +24,60 @@ router.post('/dashboard', async function (req, res) {
   let floa_euro = await floatrates.find(el => { return el.code === "EUR" });
   let blue_ars = await bluelytics.find(el => { return el.name === "blue" });
   let ars_price = utils.getPriceCurrencyInUSD(blue_ars.price_sell);
-  // let floa_ars = await floatrates.find(el => { return el.code === "ARS" });
-  let currency = selectedCoins.map(el => {
-    return {
-      id: el.id,
-      cmc_id: el.cmc_id,
-      symbol: el.symbol,
-      type: "crypto",
-      price_btc: utils.getQuantityRelBTC(btcCoin, el),
-      price_usd: el.price_usd,
-      price_eur: el.price_usd / floa_euro.inverseRate,
-      percent4rent: el.percent4rent,
-      profit: el.profit,
-      image: utils.getSVGimage(el.symbol.toLowerCase())
-    };
-  })
 
-  let dollar = utils.setFiatObject("dollar", "USD", "fiat", Number(dolartoday.USD.dolartoday), 1);
+  let currency = dashboard.getCryptoWithFormat(selectedCoins, btcCoin, floa_euro.inverseRate);
+
+  const dollar = dashboard.setFiatObject("dollar", "USD", "fiat", Number(dolartoday.USD.dolartoday), 1);
   currency.push(dollar);
 
-  let euro = utils.setFiatObject("euro", "EUR", "fiat", Number(dolartoday.EUR.dolartoday), floa_euro.inverseRate);
+  const euro = dashboard.setFiatObject("euro", "EUR", "fiat", Number(dolartoday.EUR.dolartoday), floa_euro.inverseRate);
   currency.push(euro);
 
-  let arg = utils.setFiatObject("arg", "ARS", "fiat", Number(ars_price * dolartoday.USD.dolartoday), ars_price);
+  const arg = dashboard.setFiatObject("arg", "ARS", "fiat", Number(ars_price * dolartoday.USD.dolartoday), ars_price);
   currency.push(arg);
 
-  let gold = utils.setFiatObject("gold", "GOLD", "commodity", Number(dolartoday.USD.dolartoday * price_gold_gram), Number(price_gold_gram));
+  const gold = dashboard.setFiatObject("gold", "GOLD", "commodity", Number(dolartoday.USD.dolartoday * price_gold_gram), Number(price_gold_gram));
   currency.push(gold);
 
   res.json(currency);
 });
+
+
+router.post('/dashboard2', async (req, res) => {
+  let data = await req.body;
+  const [coinMarketCap, dolartoday, floatrates, bluelytics] = await Promise.all([
+    self.cmcAll(),
+    self.dtodayInfo(),
+    self.floatrates(),
+    self.bluelyticsPrice()
+  ]);
+
+  let selectedCoins = await utils.findCoins(coinMarketCap, data.coinList)
+  let price_gold_gram = utils.goldPriceGram(dolartoday.GOLD.rate);
+  let btcCoin = await selectedCoins.find(el => { return el.symbol === "BTC" });
+  let floa_euro = await floatrates.find(el => { return el.code === "EUR" });
+  let blue_ars = await bluelytics.find(el => { return el.name === "blue" });
+  let ars_price = utils.getPriceCurrencyInUSD(blue_ars.price_sell);
+  const vesOption = await prices.getByCode(data.vesOption);
+  const vesPrice = vesOption.price || 0;
+
+  let currency = dashboard.getCryptoWithFormat(selectedCoins, btcCoin, floa_euro.inverseRate);
+
+  const dollar = dashboard.setFiatObject("dollar", "USD", "fiat", vesPrice, 1);
+  currency.push(dollar);
+
+  const euro = dashboard.setFiatObject("euro", "EUR", "fiat", vesPrice * floa_euro.inverseRate, floa_euro.inverseRate);
+  currency.push(euro);
+
+  const arg = dashboard.setFiatObject("arg", "ARS", "fiat", Number(ars_price * vesPrice), ars_price);
+  currency.push(arg);
+
+  const gold = dashboard.setFiatObject("gold", "GOLD", "commodity", Number(vesPrice * price_gold_gram), Number(price_gold_gram));
+  currency.push(gold);
+
+  res.json(currency);
+
+})
 
 router.get('/fiat/ves/prices', async function (req, res) {
   const data = await priceModel.find({ currency: "ves" }).select(['code', 'price']).exec();

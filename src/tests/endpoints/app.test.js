@@ -4,13 +4,30 @@ const request = supertest(app)
 
 describe('App endpoints Test', () => {
 
-    it('Should get a Rekorbit dashboard object', async done => {
+    it.skip('Should get a Rekorbit dashboard object', async done => {
         const crypto = ["LTC", "BTC", "ETH", "BCH", "XRP"];
         const fiat = ["USD", "EUR", "ARG", "GOLD"];
         const res = await request.post('/app/dashboard').send(
             crypto
         )
         let currencies = crypto.concat(fiat);
+        let results = await res.body.map(el => {
+            return el.symbol;
+        });
+        expect(currencies.length).toBe(results.length);
+        done()
+    })
+
+    it('Should get a Rekorbit dashboard2 object', async done => {
+        const data = {
+            coinList: ["LTC", "BTC", "ETH", "BCH", "XRP"],
+            vesOption: "BCV"
+        };
+        const fiat = ["USD", "EUR", "ARG", "GOLD"];
+        const res = await request.post('/app/dashboard2').send(
+            data
+        )
+        let currencies = data.coinList.concat(fiat);
         let results = await res.body.map(el => {
             return el.symbol;
         });
