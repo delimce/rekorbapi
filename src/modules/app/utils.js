@@ -60,5 +60,8 @@ module.exports =
             info.data = data
         }
         return info;
+    },
+    getDateNow() {
+        return new Date().toLocaleString(process.env.APP_LOCALE, { timeZone: process.env.APP_TIMEZONE })
     }
 }

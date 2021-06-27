@@ -96,6 +96,8 @@ module.exports = {
             country:post.country,
             currency:post.currency,
             type:post.type,
+            fee:search.fee,
+            date:utils.getDateNow(),
             price:post.price,
             price2:search.amount,
             title:post.bank,
