@@ -14,7 +14,12 @@ describe('localbtc module database Test', () => {
         location: "ve",
         amount: 40000000,
         fee: "2",
-        bank: "mercantil"
+        bank: "BANK"
+    }
+
+    const userFakeData = {
+        name: "test2 user",
+        email: "user2@testing.com",
     }
 
     it('Should insert new trade', async done => {
@@ -25,15 +30,25 @@ describe('localbtc module database Test', () => {
     })
 
     it('Should insert new trade with user data', async done => {
-        let result = await userModule.insert({
-            name: "test2 user",
-            email: "user2@testing.com",
-        })
+        let result = await userModule.insert(userFakeData)
         let dataUser = await result.data.toObject()
         let res = await lbtcModule.saveNewTradeWithUser(tradeFake,dataUser.token)
         expect(res.success).toBe(true);
         expect(res.data._id).toBeDefined();
         expect(res.data.user.get('email')).toBe(dataUser.email);
+        done()
+    })
+
+    it("Should insert and get trades of user inserted", async done => {
+        //create user
+        let user = await userModule.insert(userFakeData)
+        let dataUser = user.data.toObject()
+        // create user's post
+        let trade = await lbtcModule.saveNewTradeWithUser(tradeFake,dataUser.token)
+        // get user's posts
+        const res = await lbtcModule.getTradesByUser(dataUser.token);
+        expect(res.success).toBe(true);
+        expect(res.data.length).toBeGreaterThan(0);
         done()
     })
 

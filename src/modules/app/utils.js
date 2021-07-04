@@ -51,6 +51,10 @@ module.exports =
         });
         return result;
     },
+    getTokenByRequest(req) {
+        const token = req.headers["x-access-token"] || req.headers["authorization"];
+        return token || false;
+    },
     setMongooseResponse(result, msg = "ok", data = {}) {
         let info = { success: true, message: msg };
         if (!result) {

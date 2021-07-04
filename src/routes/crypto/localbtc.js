@@ -7,7 +7,7 @@ const localbtc = require("../../modules/crypto/localbtc");
 const utils = require("../../modules/app/utils");
 
 
-router.get('/localbtc/posts/currency/:cur', async function (req, res) {
+router.put('/localbtc/posts/currency/:cur', async function (req, res) {
   let params = await req.body;
   let posts = await localbtc.getTradingPostsByCurrency(params.type, req.params.cur, params.page);
   let final = posts.results.filter((post) => {
@@ -19,13 +19,6 @@ router.get('/localbtc/posts/currency/:cur', async function (req, res) {
   res.json(final);
 });
 
-
-router.get('/localbtc/posts/location/:code', async function (req, res) {
-  let params = await req.body;
-  let posts = await localbtc.getTradingPostsByLocation(params.type, req.params.code, params.name, params.page);
-  let final = localbtcLocation(params, posts);
-  res.json(final);
-});
 
 router.put('/localbtc/posts/location/:code', async function (req, res) {
   let params = await req.body;
@@ -47,8 +40,18 @@ router.get('/localbtc/trader/:username', async function (req, res) {
 
 router.post('/localbtc/new', auth, async function (req, res) {
   let data = await req.body;
-  const token = req.headers["x-access-token"] || req.headers["authorization"];
+  const token = utils.getTokenByRequest(req);
   let result = await localbtc.saveNewTradeWithUser(data, token);
+  if (!result.success) {
+    res.status(400);
+  }
+  res.json(result);
+});
+
+
+router.get('/localbtc/trades', auth, async function (req, res) {
+  const token = utils.getTokenByRequest(req);
+  const result = await localbtc.getTradesByUser(token);
   if (!result.success) {
     res.status(400);
   }
