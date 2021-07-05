@@ -6,7 +6,7 @@ describe('Trades endpoints Test', () => {
 
     it.skip('Should get a localbtc posts array by currency', async done => {
         let currency = 'usd';
-        const res = await request.get('/trades/localbtc/posts/currency/' + currency).send({
+        const res = await request.put('/trades/localbtc/posts/currency/' + currency).send({
             "type": "sell",
             "page": "1",
             "location": "us",
@@ -19,13 +19,13 @@ describe('Trades endpoints Test', () => {
 
 
     it('Should get a localbtc posts array by location', async done => {
-        let location = 've';
+        let location = 'es';
         const res = await request.put('/trades/localbtc/posts/location/' + location).send(
             {
                 "type":"buy",
                 "page":"1",
-                "currency":"ves",
-                "amount":10000000,
+                "currency":"eur",
+                "amount":100,
                 "bank":""
             }
         )
