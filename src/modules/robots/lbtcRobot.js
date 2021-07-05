@@ -1,6 +1,5 @@
 'use strict'
 const localbtcModule = require('../crypto/localbtc')
-const localBtcModel = require('../../models/localBtc')
 const utils = require('../app/utils');
 const geckoModule = require('../crypto/coingecko');
 const dtoday = require('../fiat/dolarToday');
@@ -10,7 +9,7 @@ const jsrender = require('jsrender');
 
 module.exports = {
     findPosts: async function () {
-        const posts = await localBtcModel.find({ 'notified': false });
+        const posts = await localbtcModule.getNonNotifiedTrades()
         let state = {
             posts: 0,
             notified: 0,
@@ -31,7 +30,7 @@ module.exports = {
                     this.notifyWithEmail(postData, el);
                 }
                 //saving attempt & status
-                await localBtcModel.findByIdAndUpdate({ _id: el._id }, updateData);
+                await localbtcModule.updateDataById(el._id, updateData);
                 i++;
             }
         }
@@ -45,11 +44,17 @@ module.exports = {
         let result = false;
         let posts = await localbtcModule.getTradingPostsByLocation(search.type, search.location, country, 1)
         if (posts.results.length > 0) {
-            result = posts.results.find((post) => {
+            posts.results.filter((post) => {
                 return ((post.bank && utils.anyElementsInText(post.bank.toLowerCase(), search.bank.toLowerCase()))
                     || (post.msg && utils.anyElementsInText(post.msg.toLowerCase(), search.bank.toLowerCase())))
                     && (search.amount >= post.min && search.amount <= post.max)
-                    && this.profitPrice(search, post, btcPrice) && post.profile.last_online === "ONLINE"
+                    && post.profile.last_online === "ONLINE"
+            }).every(post => {
+                if (this.profitPrice(search, post, btcPrice)) {
+                    result = post;
+                    return false;
+                }
+                return true;
             });
         }
         return result;
@@ -57,7 +62,7 @@ module.exports = {
     getCurrencyPriceOfBTC: async function (currency) {
         let price = 0;
         const btcPriceData = await geckoModule.getPricesByIds(['bitcoin']);
-        switch (currency) {
+        switch (currency.toLowerCase()) {
             case currencies[0].id: //usd
             case currencies[1].id: //eur
                 price = btcPriceData.bitcoin[currency];
@@ -83,26 +88,36 @@ module.exports = {
         }
         return Number((percent).toFixed(2) * 100);
     },
-    profitPrice(search, post, btcPrice) {
-        return (search.type === 'BUY') ?
-            (this.getPercentageFeeBtc(post.price, btcPrice) <= search.fee)
-            : (this.getPercentageFeeBtc(post.price, btcPrice) >= (search.fee * -1));
+    profitPrice: function (search, post, btcPrice) {
+        const currentFee = this.getPercentageFeeBtc(post.price, btcPrice);
+        this.updateBestFee(currentFee, search)
+        return (search.type.toUpperCase() === 'BUY') ? (currentFee <= search.fee) : (currentFee >= (search.fee * -1));
+    }, updateBestFee: async function (fee, search) {
+        //update best fee
+        if (!search.bestFee ||
+            (search.bestFee > fee && search.type.toUpperCase() === 'BUY') ||
+            (search.bestFee < fee && search.type.toUpperCase() === 'SELL')) {
+            await localbtcModule.updateDataById(search._id, {
+                bestFee: fee,
+                bestDate: new Date()
+            });
+        }
     },
     notifyWithEmail: async function (post, search) {
         email.setSubject("Your Localbitcoins post has been Found");
         email.setTo(search.user.get('email'));
         const emailData = {
-            url:post.url,
-            country:post.country,
-            currency:post.currency,
-            type:post.type,
-            fee:search.fee,
-            date:utils.getDateNow(),
-            price:post.price,
-            price2:search.amount,
-            title:post.bank,
-            msg:post.msg,
-            name:search.user.get('name')
+            url: post.url,
+            country: post.country,
+            currency: post.currency,
+            type: post.type,
+            fee: search.fee,
+            date: utils.getDateNow(),
+            price: post.price,
+            price2: search.amount,
+            title: post.bank,
+            msg: post.msg,
+            name: search.user.get('name')
         }
         let template = jsrender.templates('./src/templates/emails/lbtcposts.html');
         let html = template.render(emailData);

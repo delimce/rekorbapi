@@ -138,7 +138,11 @@ module.exports =
             lbtcTrade.user = data;
             return this.saveNewTrade(lbtcTrade);
         }
-    }, getTradesByUser: async function (token) {
+    }, getNonNotifiedTrades: async () => {
+        const trades = await LocalBtcModel.find({ 'notified': false });
+        return trades;
+    },
+    getTradesByUser: async function (token) {
         try {
             const user = await userModule.getByToken(token);
             const userPosts = await LocalBtcModel.find({ 'user.email': user.email }).exec();
@@ -146,6 +150,8 @@ module.exports =
         } catch (err) {
             return utils.setMongooseResponse(false, err.message);
         }
+    }, updateDataById: async function (id, data) {
+        await LocalBtcModel.findByIdAndUpdate(id, data);
     }
 
 }

@@ -33,6 +33,14 @@ const localBtcSchema = new Schema({
         type: Number,
         default: 0
     },
+    bestFee:{
+        type: Number,
+        default: null
+    },
+    bestDate:{
+        type:Date,
+        default:null
+    },
     notified: {
         type: Boolean,
         default: false
