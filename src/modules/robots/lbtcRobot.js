@@ -62,10 +62,11 @@ module.exports = {
     getCurrencyPriceOfBTC: async function (currency) {
         let price = 0;
         const btcPriceData = await geckoModule.getPricesByIds(['bitcoin']);
-        switch (currency.toLowerCase()) {
+        const currencyLowerValue = currency.toLowerCase();
+        switch (currencyLowerValue) {
             case currencies[0].id: //usd
             case currencies[1].id: //eur
-                price = btcPriceData.bitcoin[currency];
+                price = btcPriceData.bitcoin[currencyLowerValue];
                 break;
             case currencies[2].id://ves
                 let vesFactor = await dtoday.getUsdPriceFromDb();
