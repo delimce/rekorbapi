@@ -18,7 +18,7 @@ module.exports =
         try {
             coinMarketCap = await axios_rest.get('/cryptocurrency/listings/latest', {
                 start: "1",
-                limit: "250",
+                limit: "100",
                 convert: "USD",
                 json: true,
                 gzip: true
