@@ -3,6 +3,8 @@ const User = require('../../models/user');
 
 const utils = require('../app/utils');
 const { v4: uuidv4 } = require('uuid');
+const email = require('../app/email');
+const jsrender = require('jsrender');
 
 module.exports = {
     async insert(data) {
@@ -44,5 +46,13 @@ module.exports = {
         } catch (err) {
             return false;
         }
+    },
+    async sendUserRegisteredEmail(user) {
+        email.setSubject("Registro de usuario");
+        email.setTo(user.email);
+        let template = jsrender.templates('./src/templates/emails/register.html');
+        let html = template.render(user);
+        email.setHtml(html);
+        await email.send();
     }
 }

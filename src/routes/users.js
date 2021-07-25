@@ -1,8 +1,5 @@
 const express = require('express');
 const users = require("../modules/users/user");
-const auth = require('../middlewares/auth');
-const email = require('../modules/app/email');
-const jsrender = require('jsrender');
 let router = express.Router();
 
 
@@ -11,12 +8,7 @@ router.post('/new', async function (req, res) {
     let result = await users.insert(data);
     if (result.success) {
         let user = result.data;
-        email.setSubject("Registro de usuario");
-        email.setTo(user.email);
-        let template = jsrender.templates('./src/templates/emails/register.html');
-        let html = template.render(user);
-        email.setHtml(html);
-        await email.send();
+        users.sendUserRegisteredEmail(user);
         res.json(result);
     } else {
         res.status(400);
