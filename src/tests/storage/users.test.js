@@ -7,10 +7,12 @@ describe('Users module database Test', () => {
     beforeAll(async () => database.dbConnect());
     afterAll(async () => database.dbDisconnect());
 
-    
+
     const userFake = {
-        name: "test user",
+        name: "user",
+        surname: "test",
         email: "user@testing.com",
+        password: "P4$$w0rd."
     }
 
     it('Should insert new User', async done => {
@@ -18,6 +20,7 @@ describe('Users module database Test', () => {
         expect(res.success).toBe(true);
         expect(res.data._id).toBeDefined();
         expect(res.data.token).not.toBe(null);
+        expect(res.data.password).not.toEqual(userFake.password);
         done()
     })
 
@@ -28,6 +31,14 @@ describe('Users module database Test', () => {
         let myUser = await userModule.getById(data._id);
         let isActive = await userModule.isActive(myUser.token)
         expect(isActive).toBe(true);
+        done()
+    })
+
+    it('Should insert activate and check Login', async done => {
+        userFake.active = true;
+        let newUser = await userModule.insert(userFake)
+        let result = await userModule.login(newUser.data.email, userFake.password)
+        expect(result.success).toBe(true);
         done()
     })
 

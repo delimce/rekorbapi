@@ -5,12 +5,15 @@ const utils = require('../app/utils');
 const { v4: uuidv4 } = require('uuid');
 const email = require('../app/email');
 const jsrender = require('jsrender');
+const bcrypt = require('bcrypt');
+const SALT_ROUNDS = 10;
 
 module.exports = {
     async insert(data) {
         try {
             const user = new User(data);
             user.token = uuidv4();
+            user.password = bcrypt.hashSync(user.password, SALT_ROUNDS);
             let result = await user.save();
             return utils.setMongooseResponse(true, "user created", result);
         } catch (err) {
@@ -45,6 +48,21 @@ module.exports = {
             return result.active;
         } catch (err) {
             return false;
+        }
+    },
+    async login(email, password) {
+        try {
+            let data = await User.findOne({ email: email.toLowerCase(), active: true })
+            if (!data) {
+                return utils.setMongooseResponse(false, "Email unavailable or user inactive");
+            }
+            if (bcrypt.compareSync(password, data.password)) {
+                return utils.setMongooseResponse(true, "", data); // OK
+            } else {
+                return utils.setMongooseResponse(false, "Error in password");
+            }
+        } catch (err) {
+            return utils.setMongooseResponse(false, err.message);
         }
     },
     async sendUserRegisteredEmail(user) {

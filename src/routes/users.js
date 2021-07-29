@@ -16,6 +16,18 @@ router.post('/new', async function (req, res) {
     }
 });
 
+router.post('/login', async function (req, res) {
+    let data = req.body;
+    let result = await users.login(data.email, data.password);
+    if (result.success) {
+        let user = result.data;
+        res.json(result);
+    } else {
+        res.status(401);
+        res.send(result);
+    }
+});
+
 router.get('/activate/:token', async function (req, res) {
     let token = req.params.token;
     let userData = await users.getByToken(token);
