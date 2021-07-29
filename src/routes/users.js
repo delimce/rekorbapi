@@ -28,6 +28,19 @@ router.post('/login', async function (req, res) {
     }
 });
 
+router.put('/remember/:email', async function (req, res) {
+    let email = req.params.email;
+    let result = await users.rememberPassword(email)
+    if (result.success) {
+        let data = result.data;
+        users.sendNewPasswordEmail(data);
+        res.json(result);
+    } else {
+        res.status(401);
+        res.send(result);
+    }
+});
+
 router.get('/activate/:token', async function (req, res) {
     let token = req.params.token;
     let userData = await users.getByToken(token);

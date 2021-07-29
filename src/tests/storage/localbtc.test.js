@@ -1,6 +1,7 @@
 const database = require('../config/database')
 const lbtcModule = require('../../modules/crypto/localbtc') // model to test
 const userModule = require('../../modules/users/user') // model to test
+const userFake = require('../mocking/UserMock')
 
 describe('localbtc module database Test', () => {
 
@@ -17,11 +18,6 @@ describe('localbtc module database Test', () => {
         bank: "BANK"
     }
 
-    const userFakeData = {
-        name: "test2 user",
-        email: "user2@testing.com",
-    }
-
     it('Should insert new trade', async done => {
         let res = await lbtcModule.saveNewTrade(tradeFake)
         expect(res.success).toBe(true);
@@ -30,7 +26,7 @@ describe('localbtc module database Test', () => {
     })
 
     it('Should insert new trade with user data', async done => {
-        let result = await userModule.insert(userFakeData)
+        let result = await userModule.insert(userFake)
         let dataUser = await result.data.toObject()
         let res = await lbtcModule.saveNewTradeWithUser(tradeFake,dataUser.token)
         expect(res.success).toBe(true);
@@ -41,10 +37,10 @@ describe('localbtc module database Test', () => {
 
     it("Should insert and get trades of user inserted", async done => {
         //create user
-        let user = await userModule.insert(userFakeData)
-        let dataUser = user.data.toObject()
+        let user = await userModule.insert(userFake)
+        let dataUser = user.data;
         // create user's post
-        let trade = await lbtcModule.saveNewTradeWithUser(tradeFake,dataUser.token)
+        await lbtcModule.saveNewTradeWithUser(tradeFake,dataUser.token)
         // get user's posts
         const res = await lbtcModule.getTradesByUser(dataUser.token);
         expect(res.success).toBe(true);

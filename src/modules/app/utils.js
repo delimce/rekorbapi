@@ -67,5 +67,8 @@ module.exports =
     },
     getDateNow() {
         return new Date().toLocaleString(process.env.APP_LOCALE, { timeZone: process.env.APP_TIMEZONE })
+    },
+    generateRandomPassword: () => {
+        return Math.random().toString(36).slice(-8);
     }
 }
