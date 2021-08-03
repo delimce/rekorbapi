@@ -11,7 +11,7 @@ module.exports =
         })
     },
     getCountryByCode(code) {
-        return countries.find(el => el.cod === String(code));
+        return countries.find(el => el.cod.toLowerCase() === String(code).toLowerCase());
     },
     goldPriceGram(oz_price) {
         const gramxOz = 0.035274;
