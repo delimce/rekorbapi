@@ -9,16 +9,17 @@ describe('Users module database Test', () => {
     afterAll(async () => database.dbDisconnect());
 
     it('Should insert new User', async done => {
+        let userPass = userFake.password
         let res = await userModule.insert(userFake)
         expect(res.success).toBe(true);
         expect(res.data._id).toBeDefined();
         expect(res.data.token).not.toBe(null);
-        expect(res.data.password).not.toEqual(userFake.password);
+        expect(res.data.password).not.toBe(userPass);
         done()
     })
 
     it('Should to activate an user', async done => {
-        let result = await userModule.insert(userFake)
+        let result = await userModule.getOrCreateUserByEmail(userFake)
         let data = await result.data;
         await userModule.activate(data.email, data.token)
         let myUser = await userModule.getById(data._id);
@@ -27,17 +28,15 @@ describe('Users module database Test', () => {
         done()
     })
 
-    it('Should insert activate and check Login', async done => {
-        userFake.active = true;
-        let newUser = await userModule.insert(userFake)
-        let result = await userModule.login(newUser.data.email, userFake.password)
+    it('Should check Login with activate user', async done => {
+        let myUser = await userModule.getOrCreateUserByEmail(userFake)
+        let result = await userModule.login(myUser.data.email, userFake.password)
         expect(result.success).toBe(true);
         done()
     })
 
     it('Should generate new temporally password', async done => {
-        userFake.active = true;
-        let newUser = await userModule.insert(userFake);
+        let newUser = await userModule.getOrCreateUserByEmail(userFake);
         let result = await userModule.rememberPassword(newUser.data.email);
         expect(result.success).toBe(true);
         expect(result.data.password).not.toBe(undefined);

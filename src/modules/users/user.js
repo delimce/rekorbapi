@@ -1,21 +1,21 @@
-'use stricts'
-const User = require('../../models/user');
+'use strict'
 
-const utils = require('../app/utils');
+const UserRepository = require('../../repositories/userRepository');
 const { v4: uuidv4 } = require('uuid');
-const email = require('../app/email');
-const jsrender = require('jsrender');
 const bcrypt = require('bcrypt');
-const SALT_ROUNDS = 10;
+const utils = require('../../modules/app/utils');
+const email = require('../../modules/app/email');
+const jsRender = require('jsrender');
 const UNAVAILABLE_EMAIL_MSG = 'Email unavailable or user inactive';
+const SALT_ROUNDS = 10;
 
 module.exports = {
     async insert(data) {
         try {
-            const user = new User(data);
-            user.token = uuidv4();
-            user.password = bcrypt.hashSync(user.password, SALT_ROUNDS);
-            let result = await user.save();
+            const newUser = Object.assign({}, data);
+            newUser.token = uuidv4();
+            newUser.password = bcrypt.hashSync(data.password, SALT_ROUNDS);
+            let result = await UserRepository.save(newUser);
             return utils.setMongooseResponse(true, "user created", result);
         } catch (err) {
             return utils.setMongooseResponse(false, err.message);
@@ -23,25 +23,21 @@ module.exports = {
     },
     async getById(id) {
         try {
-            return await User.findById(id)
+            return await UserRepository.getById(id);
         } catch (err) {
             return false
         }
     },
     async getByToken(token) {
         try {
-            return (await User.findOne({ token: token })).toObject()
+            return UserRepository.getByToken(token);
         } catch (err) {
             return false
         }
     },
-    async getDataByEmail(email) {
-        let data = await User.findOne({ email: email.toLowerCase(), active: true });
-        return (!data) ? false : data;
-    },
     async activate(email, token) {
         try {
-            await User.findOneAndUpdate({ email: email, token: token }, { active: true, token: uuidv4() });
+            await UserRepository.setDocByFilters({ email: email, token: token }, { active: true, token: uuidv4() });
             return utils.setMongooseResponse(true);
         } catch (err) {
             return utils.setMongooseResponse(false, err.message);
@@ -57,7 +53,7 @@ module.exports = {
     },
     async login(email, password) {
         try {
-            let data = await this.getDataByEmail(email);
+            let data = await UserRepository.getDataByEmail(email);
             if (!data) {
                 return utils.setMongooseResponse(false, UNAVAILABLE_EMAIL_MSG);
             }
@@ -72,13 +68,13 @@ module.exports = {
     },
     async rememberPassword(email) {
         try {
-            let data = await this.getDataByEmail(email);
+            let data = await UserRepository.getDataByEmail(email);
             if (!data) {
                 return utils.setMongooseResponse(false, UNAVAILABLE_EMAIL_MSG);
             }
             let newPass = utils.generateRandomPassword();
             let hashPass = bcrypt.hashSync(newPass, SALT_ROUNDS);
-            await User.findOneAndUpdate({ email: email }, { password: hashPass, token: uuidv4() });
+            await UserRepository.setDocByFilters({ email: email }, { password: hashPass, token: uuidv4() });
             let result = {
                 name: data.name,
                 email: data.email,
@@ -89,10 +85,22 @@ module.exports = {
             return utils.setMongooseResponse(false, err.message);
         }
     },
+    async getOrCreateUserByEmail(data) {
+        try {
+            let user = await UserRepository.getDataByEmail(data.email);
+            if (!user) {
+                return this.insert(data);
+            } else {
+                return utils.setMongooseResponse(true, "user found", user);
+            }
+        } catch (err) {
+            return utils.setMongooseResponse(false, err.message);
+        }
+    },
     async sendUserRegisteredEmail(user) {
         email.setSubject("Registro de usuario");
         email.setTo(user.email);
-        let template = jsrender.templates('./src/templates/emails/register.html');
+        let template = jsRender.templates('./src/templates/emails/register.html');
         let html = template.render(user);
         email.setHtml(html);
         await email.send();
@@ -100,7 +108,7 @@ module.exports = {
     async sendNewPasswordEmail(data) {
         email.setSubject("Nueva contraseña temporal");
         email.setTo(data.email);
-        let template = jsrender.templates('./src/templates/emails/remember.html');
+        let template = jsRender.templates('./src/templates/emails/remember.html');
         let html = template.render(data);
         email.setHtml(html);
         await email.send();
