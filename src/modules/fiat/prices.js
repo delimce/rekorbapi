@@ -1,12 +1,11 @@
 'use strict';
-const Prices = require('../../models/fiatPrices');
+const PriceRepository = require('../../repositories/priceRepository');
 const utils = require('../app/utils');
 
 module.exports = {
     async insert(data) {
         try {
-            const price = new Prices(data);
-            let result = await price.save();
+            let result = await PriceRepository.new(data);
             return utils.setMongooseResponse(true, "fiat price created", result);
         } catch (err) {
             return utils.setMongooseResponse(false, err.message);
@@ -14,19 +13,14 @@ module.exports = {
     },
     async getByCode(code) {
         try {
-            return (await Prices.findOne({ code: code })).toObject()
+            return await PriceRepository.getByCode(code);
         } catch (err) {
             return false
         }
     },
     async newOrUpdate(code, data) {
         try {
-            const filter = { code: code };
-            return await Prices.findOneAndUpdate(filter, data, {
-                new: true,
-                upsert: true
-            });
-
+           return await PriceRepository.newOrUpdate(code, data);
         } catch (err) {
             return false
         }

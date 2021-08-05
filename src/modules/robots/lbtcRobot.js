@@ -1,15 +1,16 @@
 'use strict'
-const localbtcModule = require('../crypto/localbtc')
+const localBtcModule = require('../crypto/localbtc')
+const localBtcRepository = require('../../repositories/localBtcRepository')
 const utils = require('../app/utils');
 const geckoModule = require('../crypto/coingecko');
-const dtoday = require('../fiat/dolarToday');
+const dToday = require('../fiat/dolarToday');
 const currencies = require('../../../public/enums/currencies.json');
 const email = require('../app/email');
-const jsrender = require('jsrender');
+const jsRender = require('jsrender');
 
 module.exports = {
     findPosts: async function () {
-        const posts = await localbtcModule.getNonNotifiedTrades()
+        const posts = await localBtcRepository.find({ 'notified': false });
         let state = {
             posts: 0,
             notified: 0,
@@ -30,7 +31,7 @@ module.exports = {
                     this.notifyWithEmail(postData, el);
                 }
                 //saving attempt & status
-                await localbtcModule.updateDataById(el._id, updateData);
+                await localBtcRepository.updateDataById(el._id, updateData);
                 i++;
             }
         }
@@ -42,7 +43,7 @@ module.exports = {
         const country = utils.getCountryByCode(search.location).name;
         const btcPrice = await this.getCurrencyPriceOfBTC(search.currency);
         let result = false;
-        let posts = await localbtcModule.getTradingPostsByLocation(search.type, search.location, country, 1)
+        let posts = await localBtcModule.getTradingPostsByLocation(search.type, search.location, country, 1)
         if (posts.results.length > 0) {
             posts.results.filter((post) => {
                 return ((post.bank && utils.anyElementsInText(post.bank.toLowerCase(), search.bank.toLowerCase()))
@@ -69,7 +70,7 @@ module.exports = {
                 price = btcPriceData.bitcoin[currencyLowerValue];
                 break;
             case currencies[2].id://ves
-                let vesFactor = await dtoday.getUsdPriceFromDb();
+                let vesFactor = await dToday.getUsdPriceFromDb();
                 price = Number(btcPriceData.bitcoin[currencies[0].id]) * vesFactor;
                 break;
             default:
@@ -98,7 +99,7 @@ module.exports = {
         if (!search.bestFee ||
             (search.bestFee > fee && search.type.toUpperCase() === 'BUY') ||
             (search.bestFee < fee && search.type.toUpperCase() === 'SELL')) {
-            await localbtcModule.updateDataById(search._id, {
+            await localBtcRepository.updateDataById(search._id, {
                 bestFee: fee,
                 bestDate: new Date()
             });
@@ -120,7 +121,7 @@ module.exports = {
             msg: post.msg,
             name: search.user.get('name')
         }
-        let template = jsrender.templates('./src/templates/emails/lbtcposts.html');
+        let template = jsRender.templates('./src/templates/emails/lbtcposts.html');
         let html = template.render(emailData);
         email.setHtml(html);
         await email.send();

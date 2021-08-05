@@ -1,8 +1,8 @@
 'use strict';
 const axios = require('axios');
 const date = require("date-and-time");
-const LocalBtcModel = require('../../models/localBtc');
-const userModule = require('../../modules/users/user');
+const LocalBtcRepository = require('../../repositories/localBtcRepository');
+const UserRepository = require('../../repositories/userRepository');
 const utils = require('../app/utils');
 const BASE_URL = "https://localbitcoins.com/";
 const MAX_TIMEOUT = 7000
@@ -18,13 +18,13 @@ module.exports =
         }
         return status;
     },
-    getOnlineStatus: function (datetime) {
+    getOnlineStatus: function (dateTime) {
         let now = new Date();
-        let postDate = new Date(datetime);
+        let postDate = new Date(dateTime);
         let mins = date.subtract(now, postDate).toMinutes();
         return this.getStatusLabel(mins);
     },
-    getLocalbtcObject: function (localBtc) {
+    getLocalBtcObject: function (localBtc) {
         let data = localBtc;
         let resp = {};
         resp.pagination = data.pagination;
@@ -77,7 +77,7 @@ module.exports =
             url: url_localbtc
         })
 
-        let resp = this.getLocalbtcObject(info.data);
+        let resp = this.getLocalBtcObject(info.data);
         return resp;
     },
     getTradingPostsByLocation: async function (
@@ -107,7 +107,7 @@ module.exports =
             url: url_localbtc
         })
 
-        let resp = this.getLocalbtcObject(info.data);
+        let resp = this.getLocalBtcObject(info.data);
         return resp;
     },
     getTraderProfile: async function (trader) {
@@ -119,39 +119,32 @@ module.exports =
         });
         return info.data;
     },
-    saveNewTrade: async function (lbtcTrade) {
+    saveNewTrade: async function (lbcTrade) {
         try {
-            const lbtc = new LocalBtcModel(lbtcTrade);
-            let result = await lbtc.save();
+            let result = await LocalBtcRepository.save(lbcTrade);
             return utils.setMongooseResponse(true, "trade created", result);
         } catch (err) {
             return utils.setMongooseResponse(false, err.message);
         }
-
     },
-    saveNewTradeWithUser: async function (lbtcTrade, token) {
-        let user = await userModule.getByToken(token)
+    saveNewTradeWithUser: async function (lbcTrade, token) {
+        let user = await UserRepository.getByToken(token)
         if (user) {
             let data = {};
             data.name = user.name;
             data.email = user.email;
-            lbtcTrade.user = data;
-            return this.saveNewTrade(lbtcTrade);
+            lbcTrade.user = data;
+            return this.saveNewTrade(lbcTrade);
         }
-    }, getNonNotifiedTrades: async () => {
-        const trades = await LocalBtcModel.find({ 'notified': false });
-        return trades;
     },
     getTradesByUser: async function (token) {
         try {
-            const user = await userModule.getByToken(token);
-            const userPosts = await LocalBtcModel.find({ 'user.email': user.email }).exec();
+            const user = await UserRepository.getByToken(token);
+            const userPosts = await LocalBtcRepository.find({ 'user.email': user.email })
             return utils.setMongooseResponse(true, "", userPosts);
         } catch (err) {
             return utils.setMongooseResponse(false, err.message);
         }
-    }, updateDataById: async function (id, data) {
-        await LocalBtcModel.findByIdAndUpdate(id, data);
     }
 
 }
