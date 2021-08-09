@@ -78,8 +78,7 @@ module.exports = {
                 break;
         }
         return Math.trunc(price);
-    }, getPercentageFeeBtc(postPrice, btcPrice) {
-        let price = Number(postPrice) / Number(btcPrice)
+    }, getPercentageFeeBtc(price) {
         let x1 = Number(price.toFixed(2));
         let percent = 0;
         if (x1 >= 1) {
@@ -91,16 +90,18 @@ module.exports = {
         return Number((percent).toFixed(2) * 100);
     },
     profitPrice: function (search, post, btcPrice) {
-        const currentFee = this.getPercentageFeeBtc(post.price, btcPrice);
-        this.updateBestFee(currentFee, search)
+        const price = Number(post.price) / Number(btcPrice)
+        const currentFee = this.getPercentageFeeBtc(price);
+        this.updateBestFee(currentFee, search, price)
         return (search.type.toUpperCase() === 'BUY') ? (currentFee <= search.fee) : (currentFee >= (search.fee * -1));
-    }, updateBestFee: async function (fee, search) {
+    }, updateBestFee: async function (fee, search, price) {
         //update best fee
         if (!search.bestFee ||
             (search.bestFee > fee && search.type.toUpperCase() === 'BUY') ||
             (search.bestFee < fee && search.type.toUpperCase() === 'SELL')) {
             await localBtcRepository.updateDataById(search._id, {
                 bestFee: fee,
+                bestPrice: price.toFixed(2),
                 bestDate: new Date()
             });
         }

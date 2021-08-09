@@ -33,6 +33,10 @@ const localBtcSchema = new Schema({
         type: Number,
         default: 0
     },
+    bestPrice:{
+        type: Number,
+        default: null
+    },
     bestFee:{
         type: Number,
         default: null
