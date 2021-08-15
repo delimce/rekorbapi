@@ -1,6 +1,7 @@
 'use strict';
 
 const axios = require('axios');
+const utils = require('../app/utils');
 
 let apiKey = process.env.CMC_API_KEY;
 let urlPath = "https://pro-api.coinmarketcap.com/v1/";
@@ -13,7 +14,7 @@ const axios_rest = axios.create({
 
 module.exports =
 {
-    getAll: async function () {
+    getAll: async () => {
         let coinMarketCap = {}
         try {
             coinMarketCap = await axios_rest.get('/cryptocurrency/listings/latest', {
@@ -79,14 +80,10 @@ module.exports =
                 percent_change_1h: coin.quote.USD.percent_change_1h,
                 percent_change_24h: coin.quote.USD.percent_change_24h,
                 percent_change_7d: coin.quote.USD.percent_change_7d,
-                last_updated: this.convertDateToTimestamp(coin.quote.USD.last_updated),
+                last_updated: utils.convertDateToTimestamp(coin.quote.USD.last_updated),
                 tags: coin.tags
             }
         ];
-    },
-    convertDateToTimestamp: function (dateString) {
-        let date = new Date(dateString);
-        return date.getTime();
     }
 
 }

@@ -70,5 +70,9 @@ module.exports =
     },
     generateRandomPassword: () => {
         return Math.random().toString(36).slice(-8);
+    },
+    convertDateToTimestamp: (dateString) => {
+        let date = new Date(dateString);
+        return date.getTime();
     }
 }
