@@ -13,9 +13,9 @@ module.exports = {
             const $ = cheerio.load(response.body);
             let content = $('#dolar').children().last().find('strong').text().trim();
             return content;
-
-        })
-        return Number(info.replace(/\./g, '').replace(',', '.'));
+        });
+        let bcvPrice = info.split(" "); //money reconvert bcvPrice[1]
+        return Number(bcvPrice[0].replace(/\./g, '').replace(',', '.'));
     },
     async getUsdPriceFromDb() {
         const bcv = await priceModel.findOne({ code: "BCV" }).exec();
