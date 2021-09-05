@@ -14,6 +14,8 @@ module.exports = {
             new: true,
             upsert: true
         });
-
+    },
+    findBy: async (filter) => {
+        return await PriceModel.find(filter)
     }
 }

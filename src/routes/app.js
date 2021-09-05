@@ -4,8 +4,14 @@ let router = express.Router();
 const self = require("../modules/app/selfCalls");
 const utils = require("../modules/app/utils");
 const dashboard = require("../modules/app/dashboard");
-const priceModel = require('../models/fiatPrices');
+const priceRepository = require('../repositories/priceRepository');
 const prices = require('../modules/fiat/prices')
+const apicache = require('apicache');
+
+const onlyStatus200 = (req, res) => res.statusCode === 200;
+let cache = apicache.middleware;
+const cacheSuccesses = cache('60 minutes', onlyStatus200);
+
 
 router.post('/dashboard', async function (req, res) {
 
@@ -79,8 +85,8 @@ router.post('/dashboard2', async (req, res) => {
 
 })
 
-router.get('/fiat/ves/prices', async function (req, res) {
-  const data = await priceModel.find({ currency: "ves" }).select(['code', 'price']).exec();
+router.get('/fiat/ves/prices', cacheSuccesses, async function (req, res) {
+  const data = await priceRepository.findBy({ currency: "ves" })
   const prices = data.map(el => {
     return { name: el.code, price: el.price };
   })
