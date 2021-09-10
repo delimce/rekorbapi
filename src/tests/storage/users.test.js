@@ -43,4 +43,14 @@ describe('Users module database Test', () => {
         done()
     })
 
+    it('Should find a save user error', async done => {
+        let errorMessage1 = "some strange error"
+        let messageResult1 = userModule.savingErrorsHandler(errorMessage1);
+        let errorMessage2 = "E11000 error"
+        let messageResult2 = userModule.savingErrorsHandler(errorMessage2);
+        expect(messageResult2).not.toBe("unexpected error");
+        expect(messageResult1).toBe("unexpected error");
+        done()
+    })
+
 })

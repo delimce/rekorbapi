@@ -18,7 +18,7 @@ module.exports = {
             let result = await UserRepository.save(newUser);
             return utils.setMongooseResponse(true, "user created", result);
         } catch (err) {
-            return utils.setMongooseResponse(false, err.message);
+            return utils.setMongooseResponse(false, this.savingErrorsHandler(err.message));
         }
     },
     async getById(id) {
@@ -112,5 +112,18 @@ module.exports = {
         let html = template.render(data);
         email.setHtml(html);
         await email.send();
+    },
+    savingErrorsHandler(message) {
+        const errors =
+        {
+            E11000: "Email already exists",
+            required: "All fields are required"
+        }
+        const patterns = Object.keys(errors);
+        let errorsFounded = patterns.filter((el) => {
+            let word = String(el);
+            return message.includes(word)
+        })
+        return errors[errorsFounded[0]] || "unexpected error"
     }
 }
