@@ -1,6 +1,8 @@
 const express = require('express');
 const users = require("../modules/users/user");
+const utils = require('../modules/app/utils');
 let router = express.Router();
+const auth = require('../middlewares/auth');
 
 
 router.post('/new', async function (req, res) {
@@ -54,6 +56,16 @@ router.get('/activate/:token', async function (req, res) {
         res.status(403);
         res.send("token unavailable");
     }
+});
+
+router.put('/change/password', auth, async function (req, res) {
+    const token = utils.getTokenByRequest(req);
+    let data = req.body;
+    const result = await users.changePassword(token, data.password, data.password2);
+    if (!result.success) {
+        res.status(400);
+    }
+    res.json(result);
 });
 
 module.exports = router;

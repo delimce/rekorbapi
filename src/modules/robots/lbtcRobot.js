@@ -122,7 +122,7 @@ module.exports = {
             msg: post.msg,
             name: search.user.get('name')
         }
-        let template = jsRender.templates('./src/templates/emails/lbtcposts.html');
+        let template = jsRender.templates('./public/templates/emails/lbtcposts.html');
         let html = template.render(emailData);
         email.setHtml(html);
         await email.send();

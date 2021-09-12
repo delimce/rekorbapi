@@ -85,6 +85,25 @@ module.exports = {
             return utils.setMongooseResponse(false, err.message);
         }
     },
+    async changePassword(token, password, passwordRepeated) {
+        let success = false;
+        let message = "";
+        try {
+            if (password === passwordRepeated) {
+                let user = {}
+                user.password = bcrypt.hashSync(password, SALT_ROUNDS);
+                await UserRepository.setDocByFilters({ token: token }, user);
+                success = true;
+                message = "Password has changed";
+            } else {
+                message = "Both passwords don't match"
+            }
+        } catch (err) {
+            message = err.message;
+        } finally {
+            return utils.setMongooseResponse(success, message);
+        }
+    },
     async getOrCreateUserByEmail(data) {
         try {
             let user = await UserRepository.getDataByEmail(data.email);
@@ -100,7 +119,7 @@ module.exports = {
     async sendUserRegisteredEmail(user) {
         email.setSubject("Registro de usuario");
         email.setTo(user.email);
-        let template = jsRender.templates('./src/templates/emails/register.html');
+        let template = jsRender.templates('./public/templates/emails/register.html');
         let html = template.render(user);
         email.setHtml(html);
         await email.send();
@@ -108,7 +127,7 @@ module.exports = {
     async sendNewPasswordEmail(data) {
         email.setSubject("Nueva contraseña temporal");
         email.setTo(data.email);
-        let template = jsRender.templates('./src/templates/emails/remember.html');
+        let template = jsRender.templates('./public/templates/emails/remember.html');
         let html = template.render(data);
         email.setHtml(html);
         await email.send();

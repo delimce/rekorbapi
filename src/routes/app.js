@@ -10,7 +10,7 @@ const apicache = require('apicache');
 
 const onlyStatus200 = (req, res) => res.statusCode === 200;
 let cache = apicache.middleware;
-const cacheSuccesses = cache('60 minutes', onlyStatus200);
+const cacheSuccesses = cache('45 minutes', onlyStatus200);
 
 
 router.post('/dashboard', async function (req, res) {

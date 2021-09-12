@@ -43,6 +43,20 @@ describe('Users module database Test', () => {
         done()
     })
 
+    it('Should update an user password', async done => {
+        let myUser = await userModule.getOrCreateUserByEmail(userFake);
+        let password1 = "n3wP4ssw0rd"
+        let password2 = ""
+        let result = await userModule.changePassword(myUser.data.token, password1, password2)
+        password2 = "n3wP4ssw0rd"
+        let result2 = await userModule.changePassword(myUser.data.token, password1, password2)
+        let result3 = await userModule.login(myUser.data.email, password1)
+        expect(result.success).toBe(false);
+        expect(result2.success).toBe(true);
+        expect(result3.success).toBe(true);
+        done()
+    })
+
     it('Should find a save user error', async done => {
         let errorMessage1 = "some strange error"
         let messageResult1 = userModule.savingErrorsHandler(errorMessage1);
