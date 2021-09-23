@@ -49,6 +49,16 @@ router.post('/localbtc/new', auth, async function (req, res) {
 });
 
 
+router.put('/localbtc/delete/:idTrade', auth, async function (req, res) {
+  let tradeId = req.params.idTrade
+  let result = await localBtc.deleteTradeById(tradeId);
+  if (!result.success) {
+    res.status(400);
+  }
+  res.json(result);
+})
+
+
 router.get('/localbtc/trades', auth, async function (req, res) {
   const token = utils.getTokenByRequest(req);
   const result = await localBtc.getTradesByUser(token);

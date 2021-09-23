@@ -43,4 +43,15 @@ describe('localBtc module database Test', () => {
         done()
     })
 
+    it("Should insert and delete register by id", async done => {
+        let user = await userModule.getOrCreateUserByEmail(userFake)
+        let dataUser = user.data;
+        // create user's post
+        let newTrade = await lbcModule.saveNewTradeWithUser(tradeFake, dataUser.token)
+        let lastId = newTrade.data.id;
+        let res = await lbcModule.deleteTradeById(lastId);
+        expect(res.success).toBe(true);
+        done();
+    })
+
 })

@@ -11,5 +11,9 @@ module.exports = {
     },
     updateDataById: async (id, data) => {
         return await LocalBtcModel.findByIdAndUpdate(id, data);
+    },
+    deleteDataById: async (id) => {
+        return await LocalBtcModel.deleteOne({ id: id });
     }
+
 }

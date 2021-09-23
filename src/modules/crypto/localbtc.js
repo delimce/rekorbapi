@@ -127,6 +127,14 @@ module.exports =
             return utils.setMongooseResponse(false, err.message);
         }
     },
+    deleteTradeById: async function(id){
+        try {
+            let result = await LocalBtcRepository.deleteDataById(id);
+            return utils.setMongooseResponse(true, "trade deleted", result);
+        } catch (err) {
+            return utils.setMongooseResponse(false, err.message);
+        }
+    },
     saveNewTradeWithUser: async function (lbcTrade, token) {
         let user = await UserRepository.getByToken(token)
         if (user) {
