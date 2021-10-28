@@ -1,20 +1,22 @@
 const app = require('../../server') // Link to your server file
 const supertest = require('supertest')
 const request = supertest(app)
-
+const countries = require('../../../public/enums/countries.json')
 describe('App endpoints Test', () => {
 
-    it.skip('Should get a Rekorbit dashboard object', async done => {
-        const crypto = ["LTC", "BTC", "ETH", "BCH", "XRP"];
+    it('Should get a Rekorbit dashboard object', async done => {
+        const data = {
+            coinList: ["LTC", "BTC", "ETH", "BCH", "XRP"],
+            vesOption: "BCV"
+        };
         const fiat = ["USD", "EUR", "ARG", "GOLD"];
         const res = await request.post('/app/dashboard').send(
-            crypto
+            data
         )
-        let currencies = crypto.concat(fiat);
-        let results = await res.body.map(el => {
-            return el.symbol;
-        });
-        expect(currencies.length).toBe(results.length);
+        let currencies = data.coinList.concat(fiat);
+
+        expect(currencies.length).toBe(res.body.coins.length);
+        expect(countries.length).toBe(res.body.countries.length);
         done()
     })
 

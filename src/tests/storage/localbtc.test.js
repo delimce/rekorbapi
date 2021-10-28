@@ -18,16 +18,17 @@ describe('localBtc module database Test', () => {
     })
 
     it('Should insert new trade with user data', async done => {
-        let result = await userModule.insert(userFake)
+        let result = await userModule.getOrCreateUserByEmail(userFake)
         let res = {}
         let dataUser = {}
         if (result.success) {
             dataUser = await result.data.toObject()
             res = await lbcModule.saveNewTradeWithUser(tradeFake, dataUser.token)
         }
-        expect(res.success).toBe(true);
-        expect(res.data._id).toBeDefined();
-        expect(res.data.user.get('email')).toBe(dataUser.email);
+
+        const values = [res.success,res.data.user.get('email')]
+        const assertions = [true,dataUser.email]
+        expect(values).toEqual(assertions);
         done()
     })
 

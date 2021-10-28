@@ -51,9 +51,9 @@ describe('Users module database Test', () => {
         password2 = "n3wP4ssw0rd"
         let result2 = await userModule.changePassword(myUser.data.token, password1, password2)
         let result3 = await userModule.login(myUser.data.email, password1)
-        expect(result.success).toBe(false);
-        expect(result2.success).toBe(true);
-        expect(result3.success).toBe(true);
+        const values = [result.success, result2.success, result3.success];
+        const assertions = [false,true,true];
+        expect(values).toEqual(assertions);
         done()
     })
 
