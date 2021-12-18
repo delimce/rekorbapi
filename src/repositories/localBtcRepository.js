@@ -13,7 +13,7 @@ module.exports = {
         return await LocalBtcModel.findByIdAndUpdate(id, data);
     },
     deleteDataById: async (id) => {
-        return await LocalBtcModel.deleteOne({ id: id });
+        return await LocalBtcModel.deleteOne({ _id: id });
     }
 
 }

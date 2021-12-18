@@ -4,14 +4,14 @@ const express = require('express')
 const app = express()
 const port = process.env.SERVER_PORT || 8080;
 
-//middlewares
-const bodyParser = require("./middlewares/bodyParser.js");
+//middleware
+const bodyParser = require("./middleware/bodyParser.js");
 app.use(bodyParser.parsers);
 
 app.use(express.static('public'));
 
 //database
-const mongodb = require("./middlewares/database");
+const mongodb = require("./middleware/database");
 mongodb.connect()
 
 // Routes
@@ -31,7 +31,7 @@ app.use('/users', users);
 app.use('/robots', robots);
 
 //modules
-const errorHandler = require('./middlewares/errors');
+const errorHandler = require('./middleware/errors');
 app.use(errorHandler);
 
 module.exports = app;
