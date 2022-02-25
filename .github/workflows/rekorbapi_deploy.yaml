@@ -16,7 +16,7 @@ jobs:
           key:  ${{secrets.DEVSERVER_SECRET}}
           port: 22
           script: |
-            cd /home/delimce/nodeserver/rekorbapi/
+            cd /var/www/html/rekorbapi/
             git checkout .
             git pull origin main
             npm install
