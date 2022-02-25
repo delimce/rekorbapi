@@ -47,11 +47,13 @@ const localBtcSchema = new Schema({
     },
     notified: {
         type: Boolean,
-        default: false
+        default: false,
+        index: true
     },
     finished: {
         type: Boolean,
-        default: false
+        default: false,
+        index: true
     },
     user: {
         type: Map,

@@ -2,7 +2,7 @@ const express = require('express');
 const users = require("../modules/users/user");
 const utils = require('../modules/app/utils');
 let router = express.Router();
-const auth = require('../middlewares/auth');
+const auth = require('../middleware/auth');
 
 
 router.post('/new', async function (req, res) {
@@ -22,7 +22,6 @@ router.post('/login', async function (req, res) {
     let data = req.body;
     let result = await users.login(data.email, data.password);
     if (result.success) {
-        let user = result.data;
         res.json(result);
     } else {
         res.status(401);
