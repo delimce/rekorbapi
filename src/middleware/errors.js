@@ -1,16 +1,9 @@
 
 
-const prefix ="Upsss,";
-
+const prefix = "Upsss,";
 
 const error404 = function (req, res, next) {
     res.status(404);
-
-    // respond with html page
-   /*  if (req.accepts('html')) {
-        res.render('404', { url: req.url });
-        return;
-    } */
 
     // respond with json
     if (req.accepts('json')) {
@@ -22,13 +15,10 @@ const error404 = function (req, res, next) {
     res.type('txt').send('Not found');
 }
 
-
 function error500(err, req, res, next) {
     res.status(500);
     res.render('error', { error: err });
-  }
-    
-
+}
 
 module.exports = error404
 //module.exports = error500
