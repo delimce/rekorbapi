@@ -72,7 +72,7 @@ const getDashboardDataCoins = async (input) => {
 router.get('/fiat/ves/prices', cacheSuccesses, async function (req, res) {
   const data = await priceRepository.findBy({ currency: "ves" })
   const prices = data.map(el => {
-    return { name: el.code, price: el.price };
+    return { name: el.code, price: el.price, updated: el.updatedAt };
   })
   res.json(prices);
 });
