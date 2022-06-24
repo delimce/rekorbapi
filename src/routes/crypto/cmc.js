@@ -3,6 +3,7 @@ let router = express.Router();
 const cmc = require("../../modules/crypto/coinmarketcap");
 const apicache = require('apicache');
 let cache = apicache.middleware;
+const logger = require('../../modules/app/logger');
 
 // higher-order function returns false for responses of other status codes (e.g. 403, 404, 500, etc)
 const onlyStatus200 = (req, res) => res.statusCode === 200
@@ -16,6 +17,7 @@ router.get('/cmc/all', cacheSuccesses, async function (req, res) {
     res.json(final);
   } else {
     res.status(503);
+    logger.error(`Error: invalid data from api cmc/all`);
     res.render('error', { error: "service not available" });
   }
 });

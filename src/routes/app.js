@@ -8,6 +8,7 @@ const dashboard = require("../modules/app/dashboard");
 const priceRepository = require('../repositories/priceRepository');
 const prices = require('../modules/fiat/prices')
 const apicache = require('apicache');
+const logger = require('../modules/app/logger');
 
 const onlyStatus200 = (req, res) => res.statusCode === 200;
 let cache = apicache.middleware;
@@ -16,10 +17,12 @@ const cacheSuccesses = cache('45 minutes', onlyStatus200);
 
 /**
  * @deprecated: use dashboard
+ * try to delete if its not in use
  */
 router.post('/dashboard2', async function (req, res) {
   let data = await req.body;
   //multiple call
+  logger.info(`request for dashboard2: ${JSON.stringify(data)}`);
   const result = await getDashboardDataCoins(data);
   res.json(result);
 });
@@ -27,6 +30,7 @@ router.post('/dashboard2', async function (req, res) {
 
 router.post('/dashboard', async (req, res) => {
   let data = await req.body;
+  logger.info(`request for dashboard: ${JSON.stringify(data)}`);
   let response = {}
   response.coins = await getDashboardDataCoins(data);
   response.countries = countries;
@@ -71,6 +75,7 @@ const getDashboardDataCoins = async (input) => {
 
 router.get('/fiat/ves/prices', cacheSuccesses, async function (req, res) {
   const data = await priceRepository.findBy({ currency: "ves" })
+  logger.info(`request for ves prices: ${JSON.stringify(data)}`);
   const prices = data.map(el => {
     return { name: el.code, price: el.price, updated: el.updatedAt };
   })

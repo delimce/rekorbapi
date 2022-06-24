@@ -1,5 +1,6 @@
 const express = require('express');
 const auth = require('../../middleware/auth');
+const logger = require('../../modules/app/logger');
 
 let router = express.Router();
 
@@ -32,6 +33,7 @@ router.get('/localbtc/trader/:username', async function (req, res) {
     let trader = await localBtc.getTraderProfile(req.params.username)
     res.json(trader);
   } catch (err) {
+    logger.error(err);
     res.status(400);
     res.send("trader not found");
   }
@@ -43,6 +45,7 @@ router.post('/localbtc/new', auth, async function (req, res) {
   const token = utils.getTokenByRequest(req);
   let result = await localBtc.saveNewTradeWithUser(data, token);
   if (!result.success) {
+    logger.error(result.message);
     res.status(400);
   }
   res.json(result);
@@ -53,6 +56,7 @@ router.put('/localbtc/delete/:idTrade', auth, async function (req, res) {
   let tradeId = req.params.idTrade
   let result = await localBtc.deleteTradeById(tradeId);
   if (!result.success) {
+    logger.error(result.message);
     res.status(400);
   }
   res.json(result);
@@ -63,6 +67,7 @@ router.get('/localbtc/trades', auth, async function (req, res) {
   const token = utils.getTokenByRequest(req);
   const result = await localBtc.getTradesByUser(token);
   if (!result.success) {
+    logger.error(result.message);
     res.status(400);
   }
   res.json(result);

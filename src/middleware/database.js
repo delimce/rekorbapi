@@ -4,6 +4,7 @@ const host = process.env.DATABASE_HOST;
 const port = process.env.DATABASE_PORT;
 const db = process.env.DATABASE_NAME;
 const mongoose = require('mongoose');
+const logger = require('../modules/app/logger');
 
 const options = {
     useNewUrlParser: true,
@@ -26,7 +27,7 @@ module.exports = {
             () => { console.log('database ' + db + ' connected'); },
             err => {
                 console.log('database connection error');
-                console.log(err);
+                logger.error(err);
             }
         );
     }
