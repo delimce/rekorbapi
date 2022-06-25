@@ -15,20 +15,22 @@ const mongodb = require("./middleware/database");
 mongodb.connect()
 
 // Routes
-const cmc = require('./routes/crypto/cmc');
-const gecko = require('./routes/crypto/gecko');
-const fiat = require('./routes/fiat');
-const trades = require('./routes/crypto/localbtc');
-const rekorbit = require('./routes/app');
-const users = require('./routes/users');
-const robots = require('./routes/robots');
+const cmc         = require('./routes/crypto/cmc'     );
+const gecko       = require('./routes/crypto/gecko'   );
+const fiat        = require('./routes/fiat'           );
+const trades      = require('./routes/crypto/localbtc');
+const rekorbit    = require('./routes/app'            );
+const users       = require('./routes/users'          );
+const robots      = require('./routes/robots'         );
+const investments = require('./routes/investments'    );
 
-app.use('/crypto', [cmc,gecko]);
+app.use('/crypto', [cmc, gecko]);
 app.use('/fiat', fiat);
 app.use('/trades', trades);
 app.use('/app', rekorbit);
 app.use('/users', users);
 app.use('/robots', robots);
+app.use('/investments', investments);
 
 //modules
 const errorHandler = require('./middleware/errors');

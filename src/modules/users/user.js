@@ -35,9 +35,9 @@ module.exports = {
             return false
         }
     },
-    async activate(email, token) {
+    async activate(mail, token) {
         try {
-            await UserRepository.setDocByFilters({ email: email, token: token }, { active: true, token: uuidv4() });
+            await UserRepository.setDocByFilters({ email: mail, token: token }, { active: true, token: uuidv4() });
             return utils.setMongooseResponse(true);
         } catch (err) {
             return utils.setMongooseResponse(false, err.message);
@@ -51,9 +51,9 @@ module.exports = {
             return false;
         }
     },
-    async login(email, password) {
+    async login(mail, password) {
         try {
-            let data = await UserRepository.getDataByEmail(email);
+            let data = await UserRepository.getDataByEmail(mail);
             if (!data) {
                 return utils.setMongooseResponse(false, UNAVAILABLE_EMAIL_MSG);
             }
@@ -66,15 +66,15 @@ module.exports = {
             return utils.setMongooseResponse(false, err.message);
         }
     },
-    async rememberPassword(email) {
+    async rememberPassword(mail) {
         try {
-            let data = await UserRepository.getDataByEmail(email);
+            let data = await UserRepository.getDataByEmail(mail);
             if (!data) {
                 return utils.setMongooseResponse(false, UNAVAILABLE_EMAIL_MSG);
             }
             let newPass = utils.generateRandomPassword();
             let hashPass = bcrypt.hashSync(newPass, SALT_ROUNDS);
-            await UserRepository.setDocByFilters({ email: email }, { password: hashPass, token: uuidv4() });
+            await UserRepository.setDocByFilters({ email: mail }, { password: hashPass, token: uuidv4() });
             let result = {
                 name: data.name,
                 email: data.email,
