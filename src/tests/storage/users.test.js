@@ -1,6 +1,6 @@
 const database = require('../config/database')
 const userModule = require('../../modules/users/user') // model to test
-const userFake = require('../mocking/UserMock')
+const userFake = require('../fixtures/UserMock')
 
 describe('Users module database Test', () => {
 

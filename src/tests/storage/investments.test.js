@@ -1,6 +1,6 @@
 const database = require('../config/database')
 const investmentModule = require('../../modules/crypto/investment') // model to test
-const investmentFake = require('../mocking/Investment')
+const investmentFake = require('../fixtures/Investment')
 
 describe("Investments module testing", () => {
     // prepare testing database methods

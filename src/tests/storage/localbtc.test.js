@@ -1,8 +1,8 @@
 const database = require('../config/database')
 const lbcModule = require('../../modules/crypto/localbtc') // model to test
 const userModule = require('../../modules/users/user') // model to test
-const userFake = require('../mocking/UserMock')
-const tradeFake = require('../mocking/TradeFake')
+const userFake = require('../fixtures/UserMock')
+const tradeFake = require('../fixtures/TradeFake')
 
 describe('localBtc module database Test', () => {
 
