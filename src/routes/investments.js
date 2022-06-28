@@ -21,7 +21,7 @@ router.post('/new', auth, async (req, res) => {
     }
 });
 
-router.get('/:id', auth, async (req, res) => {
+router.get('/detail/:id', auth, async (req, res) => {
     let id = req.params.id;
     let result = await investModule.getById(id);
     if (result.success) {
@@ -32,6 +32,30 @@ router.get('/:id', auth, async (req, res) => {
         res.send(result);
     }
 });
+
+router.get('/list', auth, async (req, res) => {
+    const token = await utils.getTokenByRequest(req);
+    let result = await investModule.listByEmail(token);
+    if (result.success) {
+        res.json(result);
+    } else {
+        logger.error(result.message);
+        res.status(400);
+        res.send(result);
+    }
+});
+
+router.delete('/:id', auth, async (req, res) => {
+    let id = req.params.id;
+    let result = await investModule.deleteById(id);
+    if (result.success) {
+        res.json(result);
+    } else {
+        logger.error(result.message);
+        res.status(400);
+        res.send(result);
+    }
+})
 
 module.exports = router;
 
