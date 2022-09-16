@@ -11,7 +11,7 @@ afterAll(async () => database.dbDisconnect()); */
 
 describe("Investment's endpoints Test", () => {
 
-    it('Should create a new investment', async done => {
+    it.skip('Should create a new investment', async done => {
         // Sends GET Request to /test endpoint
         const res = await request.post('/investments/new').send(fakeInvest)
         expect(res.status).toBe(200);
