@@ -1,20 +1,27 @@
 'use strict';
 
-const scrapeIt = require("scrape-it");
+const cheerio = require('cheerio');
+const got = require('got');
 const dolarMonitorUrl = "https://monitordolarvenezuela.com/monitor-pantalla-completa";
 const priceModel = require('../../models/fiatPrices');
 
 module.exports = {
     getUsdPrice: async function () {
-        let info = await scrapeIt(dolarMonitorUrl, {
-            title: "title"
+
+        let info = await got(dolarMonitorUrl).then(response => {
+            const $ = cheerio.load(response.body);
+            let content = $('.head-price h1.text-center').text().trim();
+            return content;
         });
-        return this.convertTitleToPrice(info.data) //Bs
+        
+        if (info == undefined || info == null || info == "") {
+            return 0.0;
+        }
+        return this.convertTitleToPrice(info) //Bs
     },
     convertTitleToPrice: function (data) {
-        let title = data.title.split("-");
-        let price = title[0].trim().split(" ");
-        return Number(price[1].replace(/\./g,'').replace(',', '.'))
+        let price = data.split(" ");
+        return Number(price[1].replace(',', '.'))
     },
     async getUsdPriceFromDb() {
         const monitor = await priceModel.findOne({ code: "MONITOR" }).exec();

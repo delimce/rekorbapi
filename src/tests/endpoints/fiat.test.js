@@ -34,7 +34,7 @@ describe('Fiat endpoints Test', () => {
     done()
   })
 
-  it.skip('Should get a numeric > 0 ves ha price USD price', async done => {
+  it('Should get a numeric > 0 ves ha price USD price', async done => {
     // Sends GET Request to /test endpoint
     const res = await request.get('/fiat/ve/ha/price')
     expect(Number(res.body)).toBeGreaterThan(0);
