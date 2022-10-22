@@ -4,12 +4,13 @@ const cheerio = require('cheerio');
 const got = require('got');
 const priceModel = require('../../models/fiatPrices');
 
-const bcvUrl = "http://www.bcv.org.ve";
+const bcvUrl = "https://www.bcv.org.ve";
 
 module.exports = {
 
     async getUsdPrice() {
-        let info = await got(bcvUrl).then(response => {
+
+        let info = await got(bcvUrl, { rejectUnauthorized: false }).then(response => {
             const $ = cheerio.load(response.body);
             let content = $('#dolar').children().last().find('strong').text().trim();
             return content;
