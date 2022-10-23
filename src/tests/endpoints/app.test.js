@@ -13,10 +13,12 @@ describe('App endpoints Test', () => {
         const res = await request.post('/app/dashboard').send(
             data
         )
-        let currencies = data.coinList.concat(fiat);
+        const currencies = data.coinList.concat(fiat);
+        const pricesVes  = res.body.prices;
 
         expect(currencies.length).toBe(res.body.coins.length);
         expect(countries.length).toBe(res.body.countries.length);
+        expect(pricesVes.length).toBeGreaterThanOrEqual(1);
         done()
     })
 

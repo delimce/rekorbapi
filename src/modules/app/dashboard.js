@@ -25,5 +25,12 @@ module.exports = {
                 image: utils.getSVGimage(el.symbol.toLowerCase())
             };
         })
-    }
+    },
+    getPricesWithFormat(currencyList) {
+        return currencyList.map(el => {
+            return { name: el.code, price: el.price, updated: el.updatedAt };
+        })
+    },
+
 }
+                

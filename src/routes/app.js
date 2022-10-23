@@ -32,8 +32,12 @@ router.post('/dashboard', async (req, res) => {
   let data = await req.body;
   logger.info(`request for dashboard: ${JSON.stringify(data)}`);
   let response = {}
+
+  const pricesVes = await priceRepository.findBy({ currency: "ves" });
+
   response.coins = await getDashboardDataCoins(data);
   response.countries = countries;
+  response.prices = await dashboard.getPricesWithFormat(pricesVes);
   res.json(response);
 
 })
@@ -76,9 +80,7 @@ const getDashboardDataCoins = async (input) => {
 router.get('/fiat/ves/prices', cacheSuccesses, async function (req, res) {
   const data = await priceRepository.findBy({ currency: "ves" })
   logger.info(`request for ves prices: ${JSON.stringify(data)}`);
-  const prices = data.map(el => {
-    return { name: el.code, price: el.price, updated: el.updatedAt };
-  })
+  const prices = dashboard.getPricesWithFormat(data);
   res.json(prices);
 });
 
