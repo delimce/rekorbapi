@@ -2,18 +2,20 @@
 
 const cheerio = require('cheerio');
 const got = require('got');
-const dolarMonitorUrl = "https://monitordolarvenezuela.com/monitor-pantalla-completa";
+const dolarMonitorUrl = "https://monitordolarvenezuela.com/historial";
 const priceModel = require('../../models/fiatPrices');
+const { findFirstResultPost } = require('../robots/lbtcRobot');
 
 module.exports = {
     getUsdPrice: async function () {
 
         let info = await got(dolarMonitorUrl).then(response => {
             const $ = cheerio.load(response.body);
-            let content = $('.head-price h1.text-center').text().trim();
+            let content = $('div.row article.tabla-historico').first()
+                .find('.text-justify').find('.alta').text().trim();
             return content;
         });
-        
+
         if (info == undefined || info == null || info == "") {
             return 0.0;
         }
