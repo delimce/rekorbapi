@@ -1,6 +1,6 @@
 {
   "name": "rekorbapi",
-  "version": "1.1.0",
+  "version": "1.1.2",
   "description": "Api based in nodejs/express to provide resources to rekorbit mobile app",
   "main": "src/index.js",
   "scripts": {
