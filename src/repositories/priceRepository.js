@@ -17,5 +17,8 @@ module.exports = {
     },
     findBy: async (filter) => {
         return await PriceModel.find(filter)
+    },
+    deleteAll: async () => {
+        return await PriceModel.deleteMany({})
     }
 }

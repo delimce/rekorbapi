@@ -144,5 +144,13 @@ module.exports = {
             return message.includes(word)
         })
         return errors[errorsFounded[0]] || "unexpected error"
+    },
+    deleteAll() {
+        try {
+            UserRepository.deleteAll();
+            return utils.setMongooseResponse(true);
+        } catch (err) {
+            return utils.setMongooseResponse(false, err.message);
+        }
     }
 }

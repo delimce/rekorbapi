@@ -6,6 +6,9 @@ describe('Users module database Test', () => {
 
     // prepare testing database methods
     beforeAll(async () => database.dbConnect());
+    afterEach(async () => {
+        await userModule.deleteAll();
+    });
     afterAll(async () => database.dbDisconnect());
 
     it('Should insert new User', async done => {
@@ -36,8 +39,8 @@ describe('Users module database Test', () => {
     })
 
     it('Should generate new temporally password', async done => {
-        let newUser = await userModule.getOrCreateUserByEmail(userFake);
-        let result = await userModule.rememberPassword(newUser.data.email);
+        await userModule.getOrCreateUserByEmail(userFake);
+        let result = await userModule.rememberPassword(userFake.email);
         expect(result.success).toBe(true);
         expect(result.data.password).not.toBe(undefined);
         done()
@@ -48,11 +51,11 @@ describe('Users module database Test', () => {
         let password1 = "n3wP4ssw0rd"
         let password2 = ""
         let result = await userModule.changePassword(myUser.data.token, password1, password2)
-        password2 = "n3wP4ssw0rd"
+        password2 = password1
         let result2 = await userModule.changePassword(myUser.data.token, password1, password2)
         let result3 = await userModule.login(myUser.data.email, password1)
         const values = [result.success, result2.success, result3.success];
-        const assertions = [false,true,true];
+        const assertions = [false, true, true];
         expect(values).toEqual(assertions);
         done()
     })

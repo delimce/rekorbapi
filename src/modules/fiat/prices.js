@@ -24,5 +24,13 @@ module.exports = {
         } catch (err) {
             return false
         }
+    },
+    async deleteAll() {
+        try {
+            return await PriceRepository.deleteAll();
+        } catch (err) {
+            return false
+        }
     }
+
 }

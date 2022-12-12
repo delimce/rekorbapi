@@ -4,6 +4,9 @@ const pricesModule = require('../../modules/fiat/prices') // model to test
 describe("Fiat prices module testing", () => {
     // prepare testing database methods
     beforeAll(async () => database.dbConnect());
+    afterEach(async () => {
+        await pricesModule.deleteAll(); 
+    });
     afterAll(async () => database.dbDisconnect());
 
     let price = {

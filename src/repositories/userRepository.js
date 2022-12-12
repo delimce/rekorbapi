@@ -22,5 +22,8 @@ module.exports = {
     },
     setDocByFilters: async (filters, data) => {
         await UserModel.findOneAndUpdate(filters, data);
+    },
+    deleteAll: async () => {
+        return await UserModel.deleteMany({})
     }
 }
