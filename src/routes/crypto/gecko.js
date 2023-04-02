@@ -15,19 +15,25 @@ router.get('/gecko/ping', async function (req, res) {
 });
 
 router.get('/gecko/list', cacheSuccesses, async function (req, res) {
-    let list = await gecko.getMarkets()
+    const list = await gecko.getList()
+    if(!list){
+        res.status(500);
+        logger.error(`Error: invalid data from api gecko/list`);
+        res.json({ "error": "something went wrong with gecko api" });
+        return false;
+    }
     res.json(list);
 });
 
 router.get('/gecko/prices', async function (req, res) {
-    let coins = await req.body;
+    const coins =  Object.values(req.body);
     if (!coins.length) {
         res.status(400);
         logger.error(`Error: invalid data from api gecko/prices`);
         res.json({ "error": "not coins found" });
         return false;
     }
-    let list = await gecko.getPricesByIds(coins)
+    const list = await gecko.getPricesByIds(coins)
     res.json(list);
 
 });
