@@ -14,7 +14,7 @@ describe('App endpoints Test', () => {
             data
         )
         const currencies = data.coinList.concat(fiat);
-        const pricesVes  = res.body.prices;
+        const pricesVes = res.body.prices;
 
         expect(currencies.length).toBe(res.body.coins.length);
         expect(countries.length).toBe(res.body.countries.length);
@@ -27,7 +27,7 @@ describe('App endpoints Test', () => {
             coinList: ["LTC", "BTC", "ETH", "BCH", "XRP"],
             vesOption: "BCV"
         };
-        const fiat = ["USD", "EUR", "ARG", "GOLD"];
+        const fiat = ["USD", "EUR", "ARG", "SEK", "GOLD"];
         const res = await request.post('/app/dashboard2').send(
             data
         )

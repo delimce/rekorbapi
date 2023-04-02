@@ -1,7 +1,7 @@
 'use strict';
 
 const axios = require('axios');
-let currencies = ['eur', 'ars'];
+let currencies = ['eur', 'ars', 'sek'];
 
 module.exports =
 {

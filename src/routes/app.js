@@ -55,6 +55,7 @@ const getDashboardDataCoins = async (input) => {
   let price_gold_gram = utils.goldPriceGram(dolartoday.GOLD.rate);
   let btcCoin = await selectedCoins.find(el => { return el.symbol === "BTC" });
   let floa_euro = await floatrates.find(el => { return el.code === "EUR" });
+  let floa_sek = await floatrates.find(el => { return el.code === "SEK" });
   let blue_ars = await bluelytics.find(el => { return el.name === "blue" });
   let ars_price = utils.getPriceCurrencyInUSD(blue_ars.price_sell);
   const vesOption = await prices.getByCode(data.vesOption);
@@ -70,6 +71,10 @@ const getDashboardDataCoins = async (input) => {
 
   const arg = dashboard.setFiatObject("arg", "ARS", "fiat", Number(ars_price * vesPrice), ars_price);
   currencyList.push(arg);
+
+  // add sek to currencyList 
+  const sek = dashboard.setFiatObject("sek", "SEK", "fiat", Number(vesPrice * floa_sek.inverseRate), floa_sek.inverseRate);
+  currencyList.push(sek);
 
   const gold = dashboard.setFiatObject("gold", "GOLD", "commodity", Number(vesPrice * price_gold_gram), Number(price_gold_gram));
   currencyList.push(gold);
