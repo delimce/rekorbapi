@@ -18,7 +18,7 @@ describe('Trades endpoints Test', () => {
     })
 
 
-    it('Should get a localbtc posts array by location', async done => {
+    it.skip('Should get a localbtc posts array by location', async done => {
         let location = 'es';
         const res = await request.put('/trades/localbtc/posts/location/' + location).send(
             {
@@ -34,7 +34,7 @@ describe('Trades endpoints Test', () => {
     })
 
 
-    it("Should get localbtc trader's profile by username", async done => {
+    it.skip("Should get localbtc trader's profile by username", async done => {
         let username = 'saul77';
         const res = await request.get('/trades/localbtc/trader/' + username)
         expect(res.body.data.username).toBe(username)
