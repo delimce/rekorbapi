@@ -15,19 +15,6 @@ let cache = apicache.middleware;
 const cacheSuccesses = cache('45 minutes', onlyStatus200);
 
 
-/**
- * @deprecated: use dashboard
- * try to delete if its not in use
- */
-router.post('/dashboard2', async function (req, res) {
-  let data = await req.body;
-  //multiple call
-  logger.info(`request for dashboard2: ${JSON.stringify(data)}`);
-  const result = await getDashboardDataCoins(data);
-  res.json(result);
-});
-
-
 router.post('/dashboard', async (req, res) => {
   let data = await req.body;
   logger.info(`request for dashboard: ${JSON.stringify(data)}`);
