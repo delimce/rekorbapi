@@ -44,15 +44,15 @@ router.post('/dashboard', async (req, res) => {
 
 const getDashboardDataCoins = async (input) => {
   const data = input
-  const [coinMarketCap, dolartoday, floatrates, bluelytics] = await Promise.all([
+  const [coinMarketCap, floatrates, bluelytics] = await Promise.all([
     self.cmcAll(),
-    self.dtodayInfo(),
     self.floatrates(),
     self.bluelyticsPrice()
   ]);
 
   let selectedCoins = await utils.findCoins(coinMarketCap, data.coinList)
-  let price_gold_gram = utils.goldPriceGram(dolartoday.GOLD.rate);
+  const onzPrice = 1925.00; // @TODO: get from api GOLD onzPrice
+  let price_gold_gram = utils.goldPriceGram(onzPrice);
   let btcCoin = await selectedCoins.find(el => { return el.symbol === "BTC" });
   let floa_euro = await floatrates.find(el => { return el.code === "EUR" });
   let floa_sek = await floatrates.find(el => { return el.code === "SEK" });
