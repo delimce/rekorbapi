@@ -40,12 +40,12 @@ const getDashboardDataCoins = async (input) => {
   const floatratesPromise = self.floatrates();
   const bluelyticsPromise = self.bluelyticsPrice();
 
-  logger.info(`operations: getting data cmc`)
-  const coinMarketCap = await coinMarketCapPromise;
   logger.info(`operations: getting data floatrates`)
   const floatrates = await floatratesPromise;
   logger.info(`operations: getting data bluelytics`)
   const bluelytics = await bluelyticsPromise;
+  logger.info(`operations: getting data cmc`)
+  const coinMarketCap = await coinMarketCapPromise;
 
 
 
