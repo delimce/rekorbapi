@@ -20,23 +20,29 @@ router.post('/dashboard', async (req, res) => {
   logger.info(`request for dashboard: ${JSON.stringify(data)}`);
   let response = {}
 
+  logger.info(`get ves prices from db`);
   const pricesVes = await priceRepository.findBy({ currency: "ves" });
 
+  logger.info(`get  dashboard data coins`);
   response.coins = await getDashboardDataCoins(data);
   response.countries = countries;
+  logger.info(`formatting`);
   response.prices = await dashboard.getPricesWithFormat(pricesVes);
+  logger.info(`Done!`);
   res.json(response);
 
 })
 
 const getDashboardDataCoins = async (input) => {
   const data = input
+  logger.info(`operations: get coins from cmc, floatrates and bluelytics`);
   const [coinMarketCap, floatrates, bluelytics] = await Promise.all([
     self.cmcAll(),
     self.floatrates(),
     self.bluelyticsPrice()
   ]);
 
+  logger.info(`operations: filtering coins`);
   let selectedCoins = await utils.findCoins(coinMarketCap, data.coinList)
   const onzPrice = 1925.00; // @TODO: get from api GOLD onzPrice
   let price_gold_gram = utils.goldPriceGram(onzPrice);
@@ -47,6 +53,8 @@ const getDashboardDataCoins = async (input) => {
   let ars_price = utils.getPriceCurrencyInUSD(blue_ars.price_sell);
   const vesOption = await prices.getByCode(data.vesOption);
   const vesPrice = vesOption.price || 0;
+
+  logger.info(`operations: setting currency list`);
 
   let currencyList = dashboard.getCryptoWithFormat(selectedCoins, btcCoin, floa_euro.inverseRate);
 
