@@ -35,12 +35,19 @@ router.post('/dashboard', async (req, res) => {
 
 const getDashboardDataCoins = async (input) => {
   const data = input
-  logger.info(`operations: get coins from cmc, floatrates and bluelytics`);
-  const [coinMarketCap, floatrates, bluelytics] = await Promise.all([
-    self.cmcAll(),
-    self.floatrates(),
-    self.bluelyticsPrice()
-  ]);
+
+  const coinMarketCapPromise = self.cmcAll();
+  const floatratesPromise = self.floatrates();
+  const bluelyticsPromise = self.bluelyticsPrice();
+
+  logger.info(`operations: getting data cmc`)
+  const coinMarketCap = await coinMarketCapPromise;
+  logger.info(`operations: getting data floatrates`)
+  const floatrates = await floatratesPromise;
+  logger.info(`operations: getting data bluelytics`)
+  const bluelytics = await bluelyticsPromise;
+
+
 
   logger.info(`operations: filtering coins`);
   let selectedCoins = await utils.findCoins(coinMarketCap, data.coinList)
