@@ -3,6 +3,7 @@
 const axios = require('axios');
 const currencies = require('../../../public/enums/currencies.json');
 const priceModel = require('../../models/fiatPrices');
+const allDollarVen = require('./allDollarVen');
 
 module.exports =
 {
@@ -18,8 +19,10 @@ module.exports =
         return result.data;
     },
     getUsdPrice: async function () {
-        let data = await this.getInfo();
-        return Number(data.USD.dolartoday); //Bs
+        let dollar = await allDollarVen.getBySlug("dolartoday");
+        if (dollar) {
+            return dollar.price;
+        }
     },
     getById: async function (id) {
         let data = await this.getInfo();
