@@ -2,7 +2,7 @@ const express = require('express');
 let router = express.Router();
 
 const countries = require('../../public/enums/countries.json');
-const self = require("../modules/app/selfCalls");
+const selfCalls = require("../modules/app/selfCalls");
 const utils = require("../modules/app/utils");
 const dashboard = require("../modules/app/dashboard");
 const priceRepository = require('../repositories/priceRepository');
@@ -36,14 +36,14 @@ router.post('/dashboard', async (req, res) => {
 const getDashboardDataCoins = async (input) => {
   const data = input
 
-  const coinMarketCapPromise = self.cmcAll();
-  const floatratesPromise = self.floatrates();
-  const bluelyticsPromise = self.bluelyticsPrice();
+  const coinMarketCapPromise = selfCalls.cmcAll();
+  const floatratesPromise = selfCalls.floatrates();
+  const bluelyticsPromise = selfCalls.bluelyticsPrice();
 
-  logger.info(`operations: getting data floatrates`)
-  const floatrates = await floatratesPromise;
   logger.info(`operations: getting data bluelytics`)
   const bluelytics = await bluelyticsPromise;
+  logger.info(`operations: getting data floatrates`)
+  const floatrates = await floatratesPromise;
   logger.info(`operations: getting data cmc`)
   const coinMarketCap = await coinMarketCapPromise;
 
