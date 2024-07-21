@@ -40,7 +40,8 @@ const getDashboardDataCoins = async (input) => {
 
   const promises = [
     selfCalls.bluelyticsPrice(),
-    selfCalls.floatrates()
+    selfCalls.floatrates(),
+    selfCalls.cmcAll()
   ];
 
   const results = await Promise.allSettled(promises);
@@ -51,6 +52,16 @@ const getDashboardDataCoins = async (input) => {
   const floatrates = results[1].status === 'fulfilled' ? results[1].value : null;
   logger.info(`operations: received data from floatrates`);
 
+  const coinMarketCap = results[2].status === 'fulfilled' ? results[2].value : null;
+  logger.info(`operations: received data from cmc`);
+
+
+
+  logger.info(`operations: filtering coins, total cmc coins: ${coinMarketCap.length}`);
+  let selectedCoins = await utils.findCoins(coinMarketCap, data.coinList)
+
+  logger.log(`operations: getting BTC price`);
+  let btcCoin = await selectedCoins.find(el => { return el.symbol === "BTC" });
 
   logger.info(`operations: getting EURO price`);
   let floa_euro = await floatrates.find(el => { return el.code === "EUR" });
@@ -68,7 +79,7 @@ const getDashboardDataCoins = async (input) => {
 
   logger.info(`operations: setting currency list`);
 
-  let currencyList = [];
+  let currencyList = dashboard.getCryptoWithFormat(selectedCoins, btcCoin, floa_euro.inverseRate);
 
   const dollar = dashboard.setFiatObject("dollar", "USD", "fiat", vesPrice, 1);
   currencyList.push(dollar);
