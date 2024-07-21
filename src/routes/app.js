@@ -34,18 +34,26 @@ router.post('/dashboard', async (req, res) => {
 })
 
 const getDashboardDataCoins = async (input) => {
-  const data = input
+  const data = input;
 
-  const coinMarketCapPromise = selfCalls.cmcAll();
-  const floatratesPromise = selfCalls.floatrates();
-  const bluelyticsPromise = selfCalls.bluelyticsPrice();
+  logger.info(`operations: getting data from bluelytics, floatrates, and cmc concurrently`);
 
-  logger.info(`operations: getting data bluelytics`)
-  const bluelytics = await bluelyticsPromise;
-  logger.info(`operations: getting data floatrates`)
-  const floatrates = await floatratesPromise;
-  logger.info(`operations: getting data cmc`)
-  const coinMarketCap = await coinMarketCapPromise;
+  const promises = [
+    selfCalls.bluelyticsPrice(),
+    selfCalls.floatrates(),
+    selfCalls.cmcAll()
+  ];
+
+  const results = await Promise.allSettled(promises);
+
+  const bluelytics = results[0].status === 'fulfilled' ? results[0].value : null;
+  logger.info(`operations: received data from bluelytics`);
+
+  const floatrates = results[1].status === 'fulfilled' ? results[1].value : null;
+  logger.info(`operations: received data from floatrates`);
+
+  const coinMarketCap = results[2].status === 'fulfilled' ? results[2].value : null;
+  logger.info(`operations: received data from cmc`);
 
 
 
