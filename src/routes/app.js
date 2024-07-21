@@ -40,7 +40,8 @@ const getDashboardDataCoins = async (input) => {
 
   const promises = [
     selfCalls.bluelyticsPrice(),
-    selfCalls.floatrates()
+    selfCalls.floatrates(),
+    selfCalls.cmcAll()
   ];
 
   const results = await Promise.allSettled(promises);
@@ -51,24 +52,34 @@ const getDashboardDataCoins = async (input) => {
   const floatrates = results[1].status === 'fulfilled' ? results[1].value : null;
   logger.info(`operations: received data from floatrates`);
 
+  const coinMarketCap = results[2].status === 'fulfilled' ? results[2].value : null;
+  logger.info(`operations: received data from cmc`);
+
+
+
+  logger.info(`operations: filtering coins, total cmc coins: ${coinMarketCap.length}`);
+  let selectedCoins = utils.findCoins(coinMarketCap, data.coinList)
+
+  logger.log(`operations: getting BTC price`);
+  let btcCoin = selectedCoins.find(el => { return el.symbol === "BTC" });
 
   logger.info(`operations: getting EURO price`);
-  let floa_euro = await floatrates.find(el => { return el.code === "EUR" });
+  let floa_euro = floatrates.find(el => { return el.code === "EUR" });
 
   logger.info(`operations: getting SEK price`);
-  let floa_sek = await floatrates.find(el => { return el.code === "SEK" });
+  let floa_sek = floatrates.find(el => { return el.code === "SEK" });
 
   logger.info(`operations: getting ARS price`);
-  let blue_ars = await bluelytics.find(el => { return el.name === "blue" });
+  let blue_ars = bluelytics.find(el => { return el.name === "blue" });
   let ars_price = utils.getPriceCurrencyInUSD(blue_ars.price_sell);
 
   logger.info(`operations: getting VES price`);
-  const vesOption = await prices.getByCode(data.vesOption);
+  const vesOption = prices.getByCode(data.vesOption);
   const vesPrice = vesOption.price || 0;
 
   logger.info(`operations: setting currency list`);
 
-  let currencyList = [];
+  let currencyList = dashboard.getCryptoWithFormat(selectedCoins, btcCoin, floa_euro.inverseRate);
 
   const dollar = dashboard.setFiatObject("dollar", "USD", "fiat", vesPrice, 1);
   currencyList.push(dollar);
