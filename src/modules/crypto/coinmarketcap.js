@@ -43,7 +43,7 @@ module.exports =
             console.log(error)
         }
     },
-    shorInfoCoins: function (coinMarketCap) {
+    shortInfoCoins: function (coinMarketCap) {
         return coinMarketCap.map(el => {
             return this.parseCoin(el);
         })
@@ -61,6 +61,10 @@ module.exports =
         newCoin.percent4rent = parseFloat(usd_detail.percent_change_1h + usd_detail.percent_change_24h).toFixed(3);
         newCoin.profit = newCoin.percent4rent >= 0 ? true : false;
         return newCoin;
+    },
+    getShorts: async function () {
+        let coinMarketCap = await this.getAll();
+        return this.shortInfoCoins(coinMarketCap);
     },
     parseCoinDetail: function (data, index) {
         let coin = data[index];
