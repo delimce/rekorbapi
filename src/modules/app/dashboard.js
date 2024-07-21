@@ -7,10 +7,10 @@ module.exports = {
             symbol: symbol,
             type: type,
             price_bs: priceVes,
-            price_usd: priceUsd
+            price_usd: utils.getConvertToDecimal(priceUsd)
         }
     },
-    getCryptoWithFormat(coins,btcCoin,euroPrice) {
+    getCryptoWithFormat(coins, btcCoin, euroPrice) {
         return coins.map(el => {
             return {
                 id: el.id,
@@ -18,8 +18,8 @@ module.exports = {
                 symbol: el.symbol,
                 type: "crypto",
                 price_btc: utils.getQuantityRelBTC(btcCoin, el),
-                price_usd: el.price_usd,
-                price_eur: el.price_usd / euroPrice,
+                price_usd: utils.getConvertToDecimal(el.price_usd),
+                price_eur: utils.getConvertToDecimal(el.price_usd / euroPrice),
                 percent4rent: el.percent4rent,
                 profit: el.profit,
                 image: utils.getSVGimage(el.symbol.toLowerCase())
@@ -33,4 +33,3 @@ module.exports = {
     },
 
 }
-                
