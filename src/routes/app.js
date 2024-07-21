@@ -58,23 +58,23 @@ const getDashboardDataCoins = async (input) => {
 
 
   logger.info(`operations: filtering coins, total cmc coins: ${coinMarketCap.length}`);
-  let selectedCoins = await utils.findCoins(coinMarketCap, data.coinList)
+  let selectedCoins = utils.findCoins(coinMarketCap, data.coinList)
 
   logger.log(`operations: getting BTC price`);
-  let btcCoin = await selectedCoins.find(el => { return el.symbol === "BTC" });
+  let btcCoin = selectedCoins.find(el => { return el.symbol === "BTC" });
 
   logger.info(`operations: getting EURO price`);
-  let floa_euro = await floatrates.find(el => { return el.code === "EUR" });
+  let floa_euro = floatrates.find(el => { return el.code === "EUR" });
 
   logger.info(`operations: getting SEK price`);
-  let floa_sek = await floatrates.find(el => { return el.code === "SEK" });
+  let floa_sek = floatrates.find(el => { return el.code === "SEK" });
 
   logger.info(`operations: getting ARS price`);
-  let blue_ars = await bluelytics.find(el => { return el.name === "blue" });
+  let blue_ars = bluelytics.find(el => { return el.name === "blue" });
   let ars_price = utils.getPriceCurrencyInUSD(blue_ars.price_sell);
 
   logger.info(`operations: getting VES price`);
-  const vesOption = await prices.getByCode(data.vesOption);
+  const vesOption = prices.getByCode(data.vesOption);
   const vesPrice = vesOption.price || 0;
 
   logger.info(`operations: setting currency list`);
