@@ -40,6 +40,10 @@ module.exports =
     getGeckoRequest(result) {
         return (result.success) ? result.data : false;
     },
+    getConvertToDecimal(value) {
+        let transform = Number(value).toFixed(2)
+        return Number(transform);
+    },
     anyElementsInText(myText, elements) {
         const keys = elements.split(",");
         let result = false;
