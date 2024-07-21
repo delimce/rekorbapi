@@ -57,15 +57,23 @@ const getDashboardDataCoins = async (input) => {
 
 
 
-  logger.info(`operations: filtering coins`);
+  logger.info(`operations: filtering coins, total cmc coins: ${coinMarketCap.length}`);
   let selectedCoins = await utils.findCoins(coinMarketCap, data.coinList)
-  const onzPrice = 1925.00; // @TODO: get from api GOLD onzPrice
-  let price_gold_gram = utils.goldPriceGram(onzPrice);
+
+  logger.log(`operations: getting BTC price`);
   let btcCoin = await selectedCoins.find(el => { return el.symbol === "BTC" });
+
+  logger.info(`operations: getting EURO price`);
   let floa_euro = await floatrates.find(el => { return el.code === "EUR" });
+
+  logger.info(`operations: getting SEK price`);
   let floa_sek = await floatrates.find(el => { return el.code === "SEK" });
+
+  logger.info(`operations: getting ARS price`);
   let blue_ars = await bluelytics.find(el => { return el.name === "blue" });
   let ars_price = utils.getPriceCurrencyInUSD(blue_ars.price_sell);
+
+  logger.info(`operations: getting VES price`);
   const vesOption = await prices.getByCode(data.vesOption);
   const vesPrice = vesOption.price || 0;
 
@@ -86,7 +94,7 @@ const getDashboardDataCoins = async (input) => {
   const sek = dashboard.setFiatObject("sek", "SEK", "fiat", Number(vesPrice * floa_sek.inverseRate), floa_sek.inverseRate);
   currencyList.push(sek);
 
-  const gold = dashboard.setFiatObject("gold", "GOLD", "commodity", Number(vesPrice * price_gold_gram), Number(price_gold_gram));
+  const gold = dashboard.setFiatObject("gold", "GOLD", "commodity", 0, 0);
   currencyList.push(gold);
 
   return currencyList;
