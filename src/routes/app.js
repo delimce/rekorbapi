@@ -2,7 +2,10 @@ const express = require('express');
 let router = express.Router();
 
 const countries = require('../../public/enums/countries.json');
-const selfCalls = require("../modules/app/selfCalls");
+const BluelyticsModule = require("../modules/fiat/bluelytics");
+const FloatratesModule = require("../modules/fiat/floatrates");
+const CmcModule = require("../modules/crypto/coinmarketcap");
+
 const utils = require("../modules/app/utils");
 const dashboard = require("../modules/app/dashboard");
 const priceRepository = require('../repositories/priceRepository');
@@ -39,9 +42,9 @@ const getDashboardDataCoins = async (input) => {
   logger.info(`operations: getting data from bluelytics, floatrates, and cmc concurrently`);
 
   const promises = [
-    selfCalls.bluelyticsPrice(),
-    selfCalls.floatrates(),
-    selfCalls.cmcAll()
+    BluelyticsModule.getInfoArg(),
+    FloatratesModule.getInfoFiats(),
+    CmcModule.getShorts()
   ];
 
   const results = await Promise.allSettled(promises);

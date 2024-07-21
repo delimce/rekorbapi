@@ -13,7 +13,7 @@ const cacheSuccesses = cache('5 minutes', onlyStatus200)
 router.get('/cmc/all', cacheSuccesses, async function (req, res) {
   let info = await cmc.getAll();
   if (info && info.length > 1) {
-    let final = await cmc.shorInfoCoins(info);
+    let final = await cmc.shortInfoCoins(info);
     res.json(final);
   } else {
     res.status(503);
